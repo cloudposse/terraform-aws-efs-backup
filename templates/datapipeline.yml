@@ -103,23 +103,14 @@ Resources:
                 destination="$2"
                 efs_id="$3"
                 timezone="$4"
-                # backup_dir="/mnt/backups/$efs_id/$(TZ=$timezone date +%Y-%m-%d-%H-%M)"
-                sudo yum -y install nfs-utils pip
-                pip install aws
+                sudo yum -y install nfs-utils
                 [[ -d /backup ]] || sudo mkdir /backup
-                # [[ -d /mnt/backups ]] || sudo mkdir /mnt/backups
                 if ! mount -l -t nfs4 | grep -qF $source; then
                   sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$source" /backup
                 fi
                 aws s3 sync /backup s3://$destination/`date "+%Y_%m_%d_%H%M"`-$source/ --exact-timestamps --delete
-                # if ! mount -l -t nfs4 | grep -qF $destination; then
-                #  sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$destination" /mnt/backups
-                # fi
-                # sudo mkdir -p "$backup_dir"
-                # sudo rsync -ah --stats --delete --numeric-ids --log-file=/tmp/efs-restore.log /backup/ "$backup_dir"
-                # rsync_status="$?"
-                # sudo cp /tmp/efs-restore.log "$backup_dir"
                 backup_status = "$?"
+                sleep 2400
                 exit "$backup_status"
             - Key: scriptArgument
               StringValue: "#{efs_source}"
