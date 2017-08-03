@@ -1,0 +1,19 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: DataPipeline EFS Backup SNS Template
+
+Parameters:
+  Email:
+    Type: String
+
+Resources:
+  Topic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Protocol: email
+          Endpoint: !Ref Email
+
+Outputs:
+  TopicArn:
+    Value: !Ref Topic

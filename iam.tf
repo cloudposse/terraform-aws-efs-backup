@@ -24,7 +24,7 @@ resource "aws_iam_role" "ec2_role" {
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name  = "efs-backup-instance-profile"
+  name = "efs-backup-instance-profile"
   role = "${aws_iam_role.ec2_role.name}"
 }
 
@@ -53,10 +53,9 @@ resource "aws_iam_policy_attachment" "datapipeline_resource" {
 }
 
 resource "aws_iam_instance_profile" "datapipeline_resource" {
-  name  = "efs-backup-datapipeline-resource"
+  name = "efs-backup-datapipeline-resource"
   role = "${aws_iam_role.datapipeline_resource.name}"
 }
-
 
 data "aws_iam_policy_document" "datapipeline_role" {
   statement {

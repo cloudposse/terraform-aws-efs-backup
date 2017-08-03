@@ -1,0 +1,333 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: DataPipeline EFS Backup DataPipeline Template
+
+Parameters:
+  efs_source:
+    Type: String
+  s3_backups_bucket:
+    Type: String
+  security_group_id:
+    Type: AWS::EC2::SecurityGroup::Id
+  subnet_id:
+    Type: AWS::EC2::Subnet::Id
+  instance_type:
+    Type: String
+  efs_id:
+    Type: String
+  time_zone:
+    Type: String
+  image_id:
+    Type: AWS::EC2::Image::Id
+  topic_arn:
+    Type: String
+  s3_log_bucket:
+    Type: String
+  data_pipeline_resource_role:
+    Type: String
+  data_pipeline_role:
+    Type: String
+  key_pair:
+    Type: AWS::EC2::KeyPair::KeyName
+  tag:
+    Type: String
+  period:
+    Type: String
+
+
+Resources:
+  DataPipelineEFSBackup:
+    Type: AWS::DataPipeline::Pipeline
+    Properties:
+      Name: DataPipelineEFSBackup
+      Description: DataPipeline EFS Backup
+      PipelineTags:
+        - Key: Name
+          Value: !Ref tag
+      PipelineObjects:
+        - Id: Default
+          Name: Default
+          Fields:
+            - Key: type
+              StringValue: Default
+            - Key: scheduleType
+              StringValue: cron
+            - Key: failureAndRerunMode
+              StringValue: CASCADE
+            - Key: schedule
+              RefValue: DefaultSchedule
+            - Key: role
+              StringValue: "#{data_pipeline_role}"
+            - Key: resourceRole
+              StringValue: "#{data_pipeline_resource_role}"
+            - Key: pipelineLogUri
+              StringValue: "#{s3_log_bucket}"
+        - Id: EC2ResourceObj
+          Name: EC2ResourceObj
+          Fields:
+            - Key: type
+              StringValue: Ec2Resource
+            - Key: terminateAfter
+              StringValue: "30 Minutes"
+            - Key: instanceType
+              StringValue: "#{instance_type}"
+            - Key: securityGroupIds
+              StringValue: "#{security_group_id}"
+            - Key: subnetId
+              StringValue: "#{subnet_id}"
+            - Key: associatePublicIpAddress
+              StringValue: "true"
+            - Key: imageId
+              StringValue: "#{image_id}"
+            - Key: keyPair
+              StringValue: "#{key_pair}"
+        - Id: DefaultSchedule
+          Name: DefaultSchedule
+          Fields:
+            - Key: type
+              StringValue: Schedule
+            - Key: startAt
+              StringValue: FIRST_ACTIVATION_DATE_TIME
+            - Key: period
+              StringValue: "#{period}"
+        - Id: ShellCommandActivityObj
+          Name: ShellCommandActivityObj
+          Fields:
+            - Key: type
+              StringValue: ShellCommandActivity
+            - Key: runsOn
+              RefValue: EC2ResourceObj
+            - Key: command
+              StringValue: |
+                source="$1"
+                destination="$2"
+                efs_id="$3"
+                timezone="$4"
+                # backup_dir="/mnt/backups/$efs_id/$(TZ=$timezone date +%Y-%m-%d-%H-%M)"
+                sudo yum -y install nfs-utils pip
+                pip install aws
+                [[ -d /backup ]] || sudo mkdir /backup
+                # [[ -d /mnt/backups ]] || sudo mkdir /mnt/backups
+                if ! mount -l -t nfs4 | grep -qF $source; then
+                  sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$source" /backup
+                fi
+                aws s3 sync /backup s3://$destination/`date "+%Y_%m_%d_%H%M"`-$source/ --exact-timestamps --delete
+                # if ! mount -l -t nfs4 | grep -qF $destination; then
+                #  sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$destination" /mnt/backups
+                # fi
+                # sudo mkdir -p "$backup_dir"
+                # sudo rsync -ah --stats --delete --numeric-ids --log-file=/tmp/efs-restore.log /backup/ "$backup_dir"
+                # rsync_status="$?"
+                # sudo cp /tmp/efs-restore.log "$backup_dir"
+                backup_status = "$?"
+                exit "$backup_status"
+            - Key: scriptArgument
+              StringValue: "#{efs_source}"
+            - Key: scriptArgument
+              StringValue: "#{s3_backups_bucket}"
+            - Key: scriptArgument
+              StringValue: "#{efs_id}"
+            - Key: scriptArgument
+              StringValue: "#{time_zone}"
+            - Key: onSuccess
+              RefValue: SuccessNotify
+            - Key: onFail
+              RefValue: FailureNotify
+        - Id: SuccessNotify
+          Name: SuccessNotify
+          Fields:
+            - Key: type
+              StringValue: SnsAlarm
+            - Key: topicArn
+              StringValue: "#{topic_arn}"
+            - Key: subject
+              StringValue: "[Info] EFS Backup Succeeded"
+            - Key: message
+              StringValue: |
+                scheduledStartTime: "#{node.@scheduledStartTime}"
+                actualStartTime: "#{node.@actualStartTime}"
+                actualEndTime: "#{node.@actualEndTime}"
+                hostname: "#{node.hostname}"
+        - Id: FailureNotify
+          Name: FailureNotify
+          Fields:
+            - Key: type
+              StringValue: SnsAlarm
+            - Key: topicArn
+              StringValue: "#{topic_arn}"
+            - Key: subject
+              StringValue: "[Alart] EFS Backup Failed"
+            - Key: message
+              StringValue: |
+                scheduledStartTime: "#{node.@scheduledStartTime}"
+                actualStartTime: "#{node.@actualStartTime}"
+                actualEndTime: "#{node.@actualEndTime}"
+                hostname: "#{node.hostname}"
+      ParameterObjects:
+        - Id: instance_type
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: t2.nano
+            - Key: description
+              StringValue: Instance type for performing the restore.
+            - Key: allowedValues
+              StringValue: t2.nano
+            - Key: allowedValues
+              StringValue: t2.micro
+            - Key: allowedValues
+              StringValue: m3.medium
+            - Key: allowedValues
+              StringValue: m3.large
+            - Key: allowedValues
+              StringValue: m3.xlarge
+            - Key: allowedValues
+              StringValue: m3.2xlarge
+            - Key: allowedValues
+              StringValue: c3.large
+            - Key: allowedValues
+              StringValue: c3.xlarge
+            - Key: allowedValues
+              StringValue: c3.2xlarge
+            - Key: allowedValues
+              StringValue: c3.4xlarge
+            - Key: allowedValues
+              StringValue: c3.8xlarge
+        - Id: subnet_id
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: subnet-1234abcd
+            - Key: description
+              StringValue: VPC subnet for your restoration EC2 instance (ideally the same subnet used for the backup EFS mount point).
+        - Id: security_group_id
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: sg-1111111b
+            - Key: description
+              StringValue: Security group that can connect to the Production/Backup EFS mount point.
+        - Id: efs_id
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: backup-fs-12345678
+            - Key: description
+              StringValue: Name for the directory that already contains your backups.
+        - Id: time_zone
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: Asia/Tokyo
+            - Key: description
+              StringValue: TimeZone
+        - Id: efs_source
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: fs-abc.efs.us-east-1.amazonaws.com:/
+            - Key: description
+              StringValue: Production EFS mount target DNS name.
+        - Id: s3_backups_bucket
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: fs-def.efs.us-east-1.amazonaws.com:/
+            - Key: description
+              StringValue: Backup EFS mount target DNS name.
+        - Id: image_id
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: ami-12345678
+            - Key: description
+              StringValue: AMI ID for the EC2 instance.
+        - Id: s3_log_bucket
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: s3://my-s3-log-bucket
+            - Key: description
+              StringValue: S3 Log Bucket
+        - Id: data_pipeline_resource_role
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: DataPipelineDefaultResourceRole
+            - Key: description
+              StringValue: DataPipeline Resource Role
+        - Id: data_pipeline_role
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: DataPipelineDefaultRole
+            - Key: description
+              StringValue: DataPipeline Role
+        - Id: topic_arn
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: arn:aws:sns:hoge
+            - Key: description
+              StringValue: Topic ARN
+        - Id: key_pair
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: my-key
+            - Key: description
+              StringValue: Key Pair
+        - Id: period
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: "1 hours"
+            - Key: description
+              StringValue: How often the pipeline should run
+      ParameterValues:
+        - Id: instance_type
+          StringValue: !Ref instance_type
+        - Id: subnet_id
+          StringValue: !Ref subnet_id
+        - Id: security_group_id
+          StringValue: !Ref security_group_id
+        - Id: efs_id
+          StringValue: !Ref efs_id
+        - Id: time_zone
+          StringValue: !Ref time_zone
+        - Id: efs_source
+          StringValue: !Sub ${efs_source}:/
+        - Id: s3_backups_bucket
+          StringValue: !Sub ${s3_backups_bucket}:/
+        - Id: image_id
+          StringValue: !Ref image_id
+        - Id: s3_log_bucket
+          StringValue: !Sub s3://${s3_log_bucket}
+        - Id: data_pipeline_resource_role
+          StringValue: !Ref data_pipeline_resource_role
+        - Id: data_pipeline_role
+          StringValue: !Ref data_pipeline_role
+        - Id: topic_arn
+          StringValue: !Ref topic_arn
+        - Id: key_pair
+          StringValue: !Ref key_pair
+        - Id: period
+          StringValue: !Ref period
+
+Outputs:
+  DataPipelineId:
+    Value: !Ref DataPipelineEFSBackup
