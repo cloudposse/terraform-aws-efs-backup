@@ -18,6 +18,10 @@ output "efs_tags" {
   value = "${data.aws_efs_file_system.by_id.*.tags}"
 }
 
+output "efs_mount_points" {
+  value = "${aws_efs_mount_target.efs_target.*.dns_name}"
+}
+
 output "datapipeline_ids" {
   value = "${aws_cloudformation_stack.datapipeline.*.outputs["DataPipelineId"]}"
 }
