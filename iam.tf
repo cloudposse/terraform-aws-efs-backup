@@ -5,6 +5,29 @@ module "iam_label" {
   name      = "${var.name}"
 }
 
+data "aws_iam_policy_document" "ec2" {
+  statement {
+    sid     = "EC2AssumeRole"
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+
+    principals = {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
+}
+
+resource "aws_iam_role" "ec2_role" {
+  name               = "efs-backup-ec2-role"
+  assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
+}
+
+resource "aws_iam_instance_profile" "instance_profile" {
+  name  = "efs-backup-instance-profile"
+  role = "${aws_iam_role.ec2_role.name}"
+}
+
 data "aws_iam_policy_document" "datapipeline_resource" {
   statement {
     sid     = "EC2AssumeRole"
@@ -19,7 +42,7 @@ data "aws_iam_policy_document" "datapipeline_resource" {
 }
 
 resource "aws_iam_role" "datapipeline_resource" {
-  name               = "${module.iam_label.id}_datapipeline_resource_role"
+  name               = "efs-backup-datapipeline-resource-role"
   assume_role_policy = "${data.aws_iam_policy_document.datapipeline_resource.json}"
 }
 
@@ -30,9 +53,10 @@ resource "aws_iam_policy_attachment" "datapipeline_resource" {
 }
 
 resource "aws_iam_instance_profile" "datapipeline_resource" {
-  name = "${module.iam_label.id}_datapipeline_resource"
+  name  = "efs-backup-datapipeline-resource"
   role = "${aws_iam_role.datapipeline_resource.name}"
 }
+
 
 data "aws_iam_policy_document" "datapipeline_role" {
   statement {
@@ -52,7 +76,7 @@ data "aws_iam_policy_document" "datapipeline_role" {
 }
 
 resource "aws_iam_role" "datapipeline_role" {
-  name               = "${module.iam_label.id}_datapipeline_role"
+  name               = "efs-backup-datapipeline-role"
   assume_role_policy = "${data.aws_iam_policy_document.datapipeline_role.json}"
 }
 

@@ -14,6 +14,10 @@ output "aws_s3_bucket efs_backups" {
   value = "${aws_s3_bucket.efs_backups.bucket_domain_name}"
 }
 
+output "efs_ids" {
+  value = "${data.aws_efs_file_system.by_id.*.tags}"
+}
+
 //output "datapipeline_ids" {
 //  value = "${aws_cloudformation_stack.datapipeline.*.outputs["DataPipelineId"]}"
 //}
