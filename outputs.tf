@@ -14,11 +14,6 @@ output "aws_s3_bucket efs_backups" {
   value = "${aws_s3_bucket.efs_backups.bucket_domain_name}"
 }
 
-//output "efs_dns_names" {
-//  value = "${join(", ", aws_efs_mount_target.efs.*.dns_name)}"
-//}
-
-
 //output "datapipeline_ids" {
 //  value = "${aws_cloudformation_stack.datapipeline.*.outputs["DataPipelineId"]}"
 //}

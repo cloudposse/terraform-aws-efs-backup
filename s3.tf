@@ -1,12 +1,12 @@
 module "s3_log_label" {
-  source    = "../tf_label"
+  source    = "github.com/cloudposse/tf_label"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
   name      = "${var.s3_bucket_efs_name}"
 }
 
 module "s3_efs_label" {
-  source    = "../tf_label"
+  source    = "github.com/cloudposse/tf_label"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
   name      = "${var.name}"
