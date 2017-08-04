@@ -1,10 +1,3 @@
-module "iam_label" {
-  source    = "github.com/cloudposse/tf_label"
-  namespace = "${var.namespace}"
-  stage     = "${var.stage}"
-  name      = "${var.name}"
-}
-
 data "aws_iam_policy_document" "ec2" {
   statement {
     sid     = "EC2AssumeRole"
@@ -18,14 +11,14 @@ data "aws_iam_policy_document" "ec2" {
   }
 }
 
-resource "aws_iam_role" "ec2_role" {
-  name               = "efs-backup-ec2-role"
+resource "aws_iam_role" "ec2" {
+  name               = "${module.tf_label.id}-ec2"
   assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
-  name = "efs-backup-instance-profile"
-  role = "${aws_iam_role.ec2_role.name}"
+  name = "${module.tf_label.id}-instance"
+  role = "${aws_iam_role.ec2.name}"
 }
 
 data "aws_iam_policy_document" "datapipeline_resource" {
@@ -42,18 +35,18 @@ data "aws_iam_policy_document" "datapipeline_resource" {
 }
 
 resource "aws_iam_role" "datapipeline_resource" {
-  name               = "efs-backup-datapipeline-resource-role"
+  name               = "${module.tf_label.id}-resource"
   assume_role_policy = "${data.aws_iam_policy_document.datapipeline_resource.json}"
 }
 
 resource "aws_iam_policy_attachment" "datapipeline_resource" {
-  name       = "DataPipelineDefaultResourceRole"
+  name       = "${module.tf_label.id}-resource"
   roles      = ["${aws_iam_role.datapipeline_resource.name}"]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforDataPipelineRole"
 }
 
 resource "aws_iam_instance_profile" "datapipeline_resource" {
-  name = "efs-backup-datapipeline-resource"
+  name = "${module.tf_label.id}-resource"
   role = "${aws_iam_role.datapipeline_resource.name}"
 }
 
@@ -75,12 +68,12 @@ data "aws_iam_policy_document" "datapipeline_role" {
 }
 
 resource "aws_iam_role" "datapipeline_role" {
-  name               = "efs-backup-datapipeline-role"
+  name               = "${module.tf_label.id}-role"
   assume_role_policy = "${data.aws_iam_policy_document.datapipeline_role.json}"
 }
 
 resource "aws_iam_policy_attachment" "datapipeline_role" {
-  name       = "AWSDataPipelineRole"
+  name       = "${module.tf_label.id}-role"
   roles      = ["${aws_iam_role.datapipeline_role.name}"]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSDataPipelineRole"
 }

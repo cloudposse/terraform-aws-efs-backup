@@ -1,14 +1,7 @@
-module "sg_label" {
-  source    = "github.com/cloudposse/tf_label"
-  namespace = "${var.namespace}"
-  stage     = "${var.stage}"
-  name      = "${var.name}"
-}
-
 resource "aws_security_group" "datapipeline" {
-  tags        = "${module.sg_label.tags}"
+  tags        = "${module.tf_label.tags}"
   vpc_id      = "${data.aws_vpc.vpc.id}"
-  description = "${module.sg_label.id}-datapipeline-sg"
+  description = "${module.tf_label.id}-datapipeline"
 
   ingress {
     from_port   = 22
@@ -26,9 +19,9 @@ resource "aws_security_group" "datapipeline" {
 }
 
 resource "aws_security_group" "efs" {
-  tags        = "${module.sg_label.tags}"
+  tags        = "${module.tf_label.tags}"
   vpc_id      = "${data.aws_vpc.vpc.id}"
-  description = "${module.sg_label.id}-efs-sg"
+  description = "${module.tf_label.id}-efs"
 
   ingress {
     from_port = 2049
