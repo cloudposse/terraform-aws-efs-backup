@@ -97,15 +97,16 @@ Resources:
               RefValue: EC2ResourceObj
             - Key: command
               StringValue: |
+                efs_id="$1"
                 source="$1.efs.$2.amazonaws.com"
                 destination="$3"
                 sudo yum -y install nfs-utils
                 [[ -d /backup ]] || sudo mkdir /backup
                 if ! mount -l -t nfs4 | grep -qF $source; then
-                  sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$source" /backup
+                  sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$source":/ /backup
                 fi
-                aws s3 sync /backup s3://$destination/`date "+%Y_%m_%d_%H%M"`-$1/ --exact-timestamps --delete
-                backup_status = "$?"
+                sudo aws s3 sync /backup s3://$destination/$efs_id/
+                backup_status="$?"
                 exit "$backup_status"
             - Key: scriptArgument
               StringValue: "#{myEFSId}"
@@ -215,7 +216,7 @@ Resources:
             - Key: type
               StringValue: String
             - Key: default
-              StringValue:
+              StringValue: s3://efs-backups
             - Key: description
               StringValue: S3 Backup Bucket
         - Id: myImageId
@@ -286,7 +287,7 @@ Resources:
         - Id: myRegion
           StringValue: !Ref myRegion
         - Id: myS3BackupsBucket
-          StringValue: !Sub ${myS3BackupsBucket}:/
+          StringValue: !Ref myS3BackupsBucket
         - Id: myImageId
           StringValue: !Ref myImageId
         - Id: myS3LogBucket

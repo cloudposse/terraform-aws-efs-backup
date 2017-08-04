@@ -7,3 +7,4 @@ data "aws_vpc" "vpc" {
 data "aws_subnet_ids" "all" {
   vpc_id = "${data.aws_vpc.vpc.id}"
 }
+

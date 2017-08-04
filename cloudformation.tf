@@ -17,7 +17,7 @@ resource "aws_cloudformation_stack" "datapipeline" {
     mySubnetId                 = "${data.aws_subnet_ids.all.ids[0]}"
     mySecurityGroupId          = "${aws_security_group.datapipeline.id}"
     myEFSId                    = "${data.aws_efs_file_system.by_id.*.id[count.index]}"
-    myS3BackupsBucket          = "${aws_s3_bucket.efs_backups.bucket_domain_name}"
+    myS3BackupsBucket          = "${aws_s3_bucket.efs_backups.id}"
     myRegion                   = "${var.region}"
     myImageId                  = "${data.aws_ami.amazon_linux.id}"
     myTopicArn                 = "${aws_cloudformation_stack.sns.outputs["TopicArn"]}"
