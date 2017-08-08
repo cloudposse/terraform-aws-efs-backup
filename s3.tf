@@ -1,11 +1,11 @@
-resource "aws_s3_bucket" "s3" {
-  bucket        = "${var.s3_log_bucket_name}"
+resource "aws_s3_bucket" "logs" {
+  bucket        = "${module.tf_label.id}-logs"
   force_destroy = true
   tags          = "${module.tf_label.tags}"
 }
 
-resource "aws_s3_bucket" "efs_backups" {
-  bucket = "${var.s3_bucket_name}"
+resource "aws_s3_bucket" "backups" {
+  bucket = "${module.tf_label.id}-backups"
   tags   = "${module.tf_label.tags}"
 
   versioning {

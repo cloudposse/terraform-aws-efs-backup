@@ -8,7 +8,7 @@ resource "aws_cloudformation_stack" "sns" {
 }
 
 resource "aws_cloudformation_stack" "datapipeline" {
-  count         = "${length(keys(var.efs_id_mount_point))}"
+  count         = "${length(keys(var.efs_ids))}"
   name          = "${module.tf_label.id}-${count.index}"
   template_body = "${file("${path.module}/templates/datapipeline.yml")}"
 
@@ -17,11 +17,11 @@ resource "aws_cloudformation_stack" "datapipeline" {
     mySubnetId                 = "${data.aws_subnet_ids.all.ids[0]}"
     mySecurityGroupId          = "${aws_security_group.datapipeline.id}"
     myEFSId                    = "${data.aws_efs_file_system.by_id.*.id[count.index]}"
-    myS3BackupsBucket          = "${aws_s3_bucket.efs_backups.id}"
+    myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
     myRegion                   = "${var.region}"
     myImageId                  = "${data.aws_ami.amazon_linux.id}"
     myTopicArn                 = "${aws_cloudformation_stack.sns.outputs["TopicArn"]}"
-    myS3LogBucket              = "${aws_s3_bucket.s3.id}"
+    myS3LogBucket              = "${aws_s3_bucket.logs.id}"
     myDataPipelineResourceRole = "${aws_iam_instance_profile.datapipeline_resource.name}"
     myDataPipelineRole         = "${aws_iam_role.datapipeline_role.name}"
     myKeyPair                  = "${var.ssh_key_name}"
