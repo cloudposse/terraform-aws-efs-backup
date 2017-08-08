@@ -98,14 +98,15 @@ Resources:
             - Key: command
               StringValue: |
                 efs_id="$1"
-                source="$1.efs.$2.amazonaws.com"
+                region="$2"
                 destination="$3"
+                source="${efs_id}.efs.${region}.amazonaws.com"
                 sudo yum -y install nfs-utils
                 [[ -d /backup ]] || sudo mkdir /backup
                 if ! mount -l -t nfs4 | grep -qF $source; then
                   sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$source":/ /backup
                 fi
-                sudo aws s3 sync /backup s3://$destination/$efs_id/
+                sudo aws s3 sync /backup s3://$destination/${efs_id}/
                 backup_status="$?"
                 exit "$backup_status"
             - Key: scriptArgument
@@ -208,7 +209,7 @@ Resources:
             - Key: type
               StringValue: String
             - Key: default
-              StringValue: Asia/Tokyo
+              StringValue: GMT
             - Key: description
               StringValue: TimeZone
         - Id: myS3BackupsBucket

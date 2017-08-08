@@ -1,5 +1,5 @@
 output "aws_vpc" {
-  value = "${data.aws_vpc.vpc.id}"
+  value = "${data.aws_vpc.default.id}"
 }
 
 output "aws_subnet_ids" {

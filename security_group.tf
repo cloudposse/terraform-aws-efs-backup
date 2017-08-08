@@ -1,7 +1,7 @@
 resource "aws_security_group" "datapipeline" {
   tags        = "${module.tf_label.tags}"
-  vpc_id      = "${data.aws_vpc.vpc.id}"
-  description = "${module.tf_label.id}-datapipeline"
+  vpc_id      = "${data.aws_vpc.default.id}"
+  description = "${module.tf_label.id}"
 
   ingress {
     from_port   = 22
@@ -20,7 +20,7 @@ resource "aws_security_group" "datapipeline" {
 
 resource "aws_security_group" "efs" {
   tags        = "${module.tf_label.tags}"
-  vpc_id      = "${data.aws_vpc.vpc.id}"
+  vpc_id      = "${data.aws_vpc.default.id}"
   description = "${module.tf_label.id}-efs"
 
   ingress {
