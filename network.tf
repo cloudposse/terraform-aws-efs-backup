@@ -7,4 +7,3 @@ data "aws_vpc" "default" {
 data "aws_subnet_ids" "all" {
   vpc_id = "${data.aws_vpc.default.id}"
 }
-
