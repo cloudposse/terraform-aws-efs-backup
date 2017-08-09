@@ -4,6 +4,6 @@ data "aws_vpc" "default" {
 }
 
 # Get all subnets from the necessary vpc
-data "aws_subnet_ids" "all" {
+data "aws_subnet_ids" "default" {
   vpc_id = "${data.aws_vpc.default.id}"
 }

@@ -22,12 +22,13 @@ variable "datapipeline_config" {
 }
 
 variable "efs_ids" {
-  type = "map"
+  type = "list"
 
-  default = {}
+  default = []
 }
 
-variable "ssh_key_name" {
+# Set a name of ssh key that will be deployed on DataPipeline's instance. The key should be present in AWS.
+variable "ssh_key_pair" {
   default = ""
 }
 
@@ -41,36 +42,4 @@ variable "namespace" {
 
 variable "stage" {
   default = ""
-}
-
-data "aws_availability_zones" "az" {}
-
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-
-  filter {
-    name   = "name"
-    values = ["amzn-ami-hvm-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  filter {
-    name   = "block-device-mapping.volume-type"
-    values = ["gp2"]
-  }
 }
