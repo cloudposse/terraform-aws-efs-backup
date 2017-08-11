@@ -1,5 +1,13 @@
 variable "name" {
-  default = "efs-backup"
+  default = ""
+}
+
+variable "namespace" {
+  default = ""
+}
+
+variable "stage" {
+  default = ""
 }
 
 variable "region" {
@@ -36,10 +44,3 @@ variable "s3_bucket_expiration_days" {
   default = "3"
 }
 
-variable "namespace" {
-  default = ""
-}
-
-variable "stage" {
-  default = ""
-}

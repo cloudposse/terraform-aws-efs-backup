@@ -1,12 +1,26 @@
+module "log_label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
+  namespace = "${var.namespace}"
+  stage     = "${var.stage}"
+  name      = "logs"
+}
+
 resource "aws_s3_bucket" "logs" {
-  bucket        = "${module.tf_label.id}-logs"
+  bucket        = "${module.log_label.id}"
   force_destroy = true
-  tags          = "${module.tf_label.tags}"
+  tags          = "${module.log_label.tags}"
+}
+
+module "backups_label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
+  namespace = "${var.namespace}"
+  stage     = "${var.stage}"
+  name      = "backups"
 }
 
 resource "aws_s3_bucket" "backups" {
-  bucket = "${module.tf_label.id}-backups"
-  tags   = "${module.tf_label.tags}"
+  bucket = "${module.backups_label.id}"
+  tags   = "${module.backups_label.tags}"
 
   versioning {
     enabled = true
