@@ -8,7 +8,7 @@ resource "aws_cloudformation_stack" "sns" {
 }
 
 resource "aws_cloudformation_stack" "datapipeline" {
-  count         = "${length(keys(var.efs_ids))}"
+  count         = "${length(var.efs_ids)}"
   name          = "${module.tf_label.id}-${count.index}"
   template_body = "${file("${path.module}/templates/datapipeline.yml")}"
 

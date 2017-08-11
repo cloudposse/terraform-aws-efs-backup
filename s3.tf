@@ -2,7 +2,7 @@ module "log_label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
-  name      = "logs"
+  name      = "${var.name}-logs"
 }
 
 resource "aws_s3_bucket" "logs" {
@@ -15,7 +15,7 @@ module "backups_label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
-  name      = "backups"
+  name      = "${var.name}-backups"
 }
 
 resource "aws_s3_bucket" "backups" {

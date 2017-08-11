@@ -15,7 +15,7 @@ module "ec2_label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
-  name      = "ec2"
+  name      = "${var.name}-ec2"
 }
 
 resource "aws_iam_role" "ec2" {
@@ -27,7 +27,7 @@ module "instance_label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
-  name      = "instance"
+  name      = "${var.name}-instance"
 }
 
 resource "aws_iam_instance_profile" "instance_profile" {
@@ -52,7 +52,7 @@ module "resource_label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
-  name      = "resource"
+  name      = "${var.name}-resource"
 }
 
 resource "aws_iam_role" "datapipeline_resource" {
@@ -92,7 +92,7 @@ module "role_label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
-  name      = "role"
+  name      = "${var.name}-role"
 }
 
 resource "aws_iam_role" "datapipeline_role" {
