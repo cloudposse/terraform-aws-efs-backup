@@ -1,5 +1,5 @@
 resource "aws_cloudformation_stack" "sns" {
-  name          = "${module.tf_label.id}"
+  name          = "${module.label.id}"
   template_body = "${file("${path.module}/templates/sns.yml")}"
 
   parameters {
@@ -9,7 +9,7 @@ resource "aws_cloudformation_stack" "sns" {
 
 resource "aws_cloudformation_stack" "datapipeline" {
   count         = "${length(var.efs_ids)}"
-  name          = "${module.tf_label.id}-${count.index}"
+  name          = "${module.label.id}-${count.index}"
   template_body = "${file("${path.module}/templates/datapipeline.yml")}"
 
   parameters {
@@ -22,10 +22,10 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myImageId                  = "${data.aws_ami.amazon_linux.id}"
     myTopicArn                 = "${aws_cloudformation_stack.sns.outputs["TopicArn"]}"
     myS3LogBucket              = "${aws_s3_bucket.logs.id}"
-    myDataPipelineResourceRole = "${aws_iam_instance_profile.datapipeline_resource.name}"
-    myDataPipelineRole         = "${aws_iam_role.datapipeline_role.name}"
+    myDataPipelineResourceRole = "${aws_iam_instance_profile.resource_role.name}"
+    myDataPipelineRole         = "${aws_iam_role.role.name}"
     myKeyPair                  = "${var.ssh_key_pair}"
     myPeriod                   = "${var.datapipeline_config["period"]}"
-    Tag                        = "${module.tf_label.id}-${count.index}"
+    Tag                        = "${module.label.id}-${count.index}"
   }
 }

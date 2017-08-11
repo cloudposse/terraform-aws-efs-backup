@@ -1,4 +1,4 @@
-module "log_label" {
+module "logs_label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
@@ -6,9 +6,9 @@ module "log_label" {
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket        = "${module.log_label.id}"
+  bucket        = "${module.logs_label.id}"
   force_destroy = true
-  tags          = "${module.log_label.tags}"
+  tags          = "${module.logs_label.tags}"
 }
 
 module "backups_label" {
@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "backups" {
     prefix  = "efs"
 
     noncurrent_version_expiration {
-      days = "${var.s3_bucket_expiration_days}"
+      days = "${var.s3_version_expiration}"
     }
   }
 }

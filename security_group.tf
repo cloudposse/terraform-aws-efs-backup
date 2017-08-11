@@ -1,7 +1,7 @@
 resource "aws_security_group" "datapipeline" {
-  tags        = "${module.tf_label.tags}"
+  tags        = "${module.label.tags}"
   vpc_id      = "${data.aws_vpc.default.id}"
-  description = "${module.tf_label.id}"
+  description = "${module.label.id}"
 
   ingress {
     from_port   = 22
@@ -18,10 +18,17 @@ resource "aws_security_group" "datapipeline" {
   }
 }
 
+module "efs_label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
+  namespace = "${var.namespace}"
+  stage     = "${var.stage}"
+  name      = "${var.name}-efs"
+}
+
 resource "aws_security_group" "efs" {
-  tags        = "${module.tf_label.tags}"
+  tags        = "${module.label.tags}"
   vpc_id      = "${data.aws_vpc.default.id}"
-  description = "${module.tf_label.id}-efs"
+  description = "${module.efs_label.id}"
 
   ingress {
     from_port = 2049

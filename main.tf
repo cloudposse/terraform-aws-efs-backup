@@ -6,14 +6,14 @@ provider "aws" {
   region = "${var.region}"
 }
 
-module "tf_label" {
+module "label" {
   source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
   namespace = "${var.namespace}"
   stage     = "${var.stage}"
   name      = "${var.name}"
 }
 
-data "aws_availability_zones" "default" {}
+//data "aws_availability_zones" "default" {}
 
 data "aws_ami" "amazon_linux" {
   most_recent = true

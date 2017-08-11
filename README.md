@@ -28,7 +28,7 @@ module "efs_backup" {
   region                    = "${var.region}"
   vpc_id                    = "${var.vpc_id}"
   efs_ids                   = "${var.efs_ids}"
-  s3_bucket_expiration_days = "${var.s3_bucket_expiration_days}"
+  s3_version_expiration     = "${var.s3_version_expiration}"
   ssh_key_pair              = "${var.ssh_key_pair}"
 
   datapipeline_config = "${map(
@@ -44,19 +44,19 @@ module "efs_backup" {
 
 ## Variables
 
-|  Name                        |  Default       |  Description                                              | Required |
+|  Name                        |  Default       |  Description                                             | Required |
 |:----------------------------:|:--------------:|:--------------------------------------------------------:|:--------:|
 | namespace                    | ``             | Namespace (e.g. `cp` or `cloudposse`)                    | Yes      |
 | stage                        | ``             | Stage (e.g. `prod`, `dev`, `staging`                     | Yes      |
-| name                         | ``             | Name  (e.g. `efs-backup`)                           | Yes      |
+| name                         | ``             | Name  (e.g. `efs-backup`)                                | Yes      |
 | region                       | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)| Yes      |
-| vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes      |
-| efs_ids                     | `` |List of EFS ID | Yes       |
-| s3_bucket_expiration_days   | `3` | Delete S3 objects after a specified period of time (days) | Yes       |
-| ssh_key_pair                | `` |A ssh key that will be deployed on DataPipeline's instance | Yes       |
-| instance_type             | `t2.micro` | 	Instance type to use | No       |
-| email                     | `` | Email to use in SNS  | Yes       |
-| period                    | `24 hours` | Frequency of pipeline execution | No       |
+| vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes   |
+| efs_ids                      | []             | List of EFS ID                                           | Yes      |
+| s3_version_expiration    | `3`            | Delete S3 objects after a specified period of time (days)| Yes      |
+| ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes      |
+| instance_type                | `t2.micro`     | Instance type to use                                     | No       |
+| email                        | ``             | Email to use in SNS                                      | Yes      |
+| period                       | `24 hours`     | Frequency of pipeline execution                          | No       |
 
 
 
