@@ -65,3 +65,6 @@ output "efs_backup_security_group" {
 to a security group of EFS Filesystems
 
 
+## References
+* Thanks https://github.com/knakayama/datapipeline-efs-backup-demo for
+inspiration
