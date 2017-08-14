@@ -40,7 +40,6 @@ variable "ssh_key_pair" {
   default = ""
 }
 
-variable "s3_version_expiration" {
+variable "noncurrent_version_expiration_days" {
   default = "3"
 }
-

@@ -31,7 +31,7 @@ resource "aws_s3_bucket" "backups" {
     prefix  = "efs"
 
     noncurrent_version_expiration {
-      days = "${var.s3_version_expiration}"
+      days = "${var.noncurrent_version_expiration_days}"
     }
   }
 }

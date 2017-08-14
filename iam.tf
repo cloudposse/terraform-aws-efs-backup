@@ -24,7 +24,7 @@ resource "aws_iam_role" "resource_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "resource_role" {
-  role      = "${aws_iam_role.resource_role.name}"
+  role       = "${aws_iam_role.resource_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforDataPipelineRole"
 }
 
@@ -63,6 +63,6 @@ resource "aws_iam_role" "role" {
 }
 
 resource "aws_iam_role_policy_attachment" "role" {
-  role      = "${aws_iam_role.role.name}"
+  role       = "${aws_iam_role.role.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSDataPipelineRole"
 }

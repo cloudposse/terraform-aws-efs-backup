@@ -1,11 +1,9 @@
 # tf_efs_backup
 
-# Terraform module for automatic EFS backup
-
-This repo contains a terraform module that creates backup of EFS Filesystems
+This repo contains a terraform module for automatic EFS backup
 
 The workflow is simple:
-* Periodically launch resource (EC 2 instance) based on schedule
+* Periodically launch resource (EC2 instance) based on schedule
 * Execute the shell command defined in the activity on the instance
 * Execute sync data from Production EFS to S3 Bucket by aws-cli
 * The execution log of the activity is stored in S3
@@ -20,14 +18,14 @@ Include this repository as a module in your existing terraform code:
 module "efs_backup" {
   source = "git::https://github.com/cloudposse/tf_efs_backup.git?ref=master"
 
-  name                      = "${var.name}"
-  stage                     = "${var.stage}"
-  namespace                 = "${var.namespace}"
-  region                    = "${var.region}"
-  vpc_id                    = "${var.vpc_id}"
-  efs_ids                   = "${var.efs_ids}"
-  s3_version_expiration     = "${var.s3_version_expiration}"
-  ssh_key_pair              = "${var.ssh_key_pair}"
+  name                               = "${var.name}"
+  stage                              = "${var.stage}"
+  namespace                          = "${var.namespace}"
+  region                             = "${var.region}"
+  vpc_id                             = "${var.vpc_id}"
+  efs_ids                            = "${var.efs_ids}"
+  noncurrent_version_expiration_days = "${var.noncurrent_version_expiration_days}"
+  ssh_key_pair                       = "${var.ssh_key_pair}"
 
   datapipeline_config = "${map(
     "instance_type", "t2.micro",
@@ -54,8 +52,8 @@ output "efs_backup_security_group" {
 | region                       | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)| Yes      |
 | vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes   |
 | efs_ids                      | []             | List of EFS ID                                           | Yes      |
-| s3_version_expiration        | `3`            | Delete S3 objects after a specified period of time (days)| Yes      |
-| ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes      |
+| noncurrent_version_expiration_days| `3`       | S3 object versions expiration period (days)              | Yes      |
+| ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes     |
 | instance_type                | `t2.micro`     | Instance type to use                                     | No       |
 | email                        | ``             | Email to use in SNS                                      | Yes      |
 | period                       | `24 hours`     | Frequency of pipeline execution                          | No       |
