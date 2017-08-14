@@ -41,5 +41,5 @@ variable "ssh_key_pair" {
 }
 
 variable "noncurrent_version_expiration_days" {
-  default = "3"
+  default = "35"
 }
