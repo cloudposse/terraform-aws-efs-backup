@@ -16,8 +16,6 @@ The workflow is simple:
 
 Include this repository as a module in your existing terraform code:
 
-Notes:
-
 ```
 module "efs_backup" {
   source = "git::https://github.com/cloudposse/tf_efs_backup.git?ref=master"
@@ -39,6 +37,10 @@ module "efs_backup" {
     )}"
 }
 
+
+output "efs_backup_security_group" {
+  value = "${module.efs_backup.security_group_id}"
+}
 ```
 
 
@@ -52,7 +54,7 @@ module "efs_backup" {
 | region                       | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)| Yes      |
 | vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes   |
 | efs_ids                      | []             | List of EFS ID                                           | Yes      |
-| s3_version_expiration    | `3`            | Delete S3 objects after a specified period of time (days)| Yes      |
+| s3_version_expiration        | `3`            | Delete S3 objects after a specified period of time (days)| Yes      |
 | ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes      |
 | instance_type                | `t2.micro`     | Instance type to use                                     | No       |
 | email                        | ``             | Email to use in SNS                                      | Yes      |
@@ -61,6 +63,7 @@ module "efs_backup" {
 
 
 ## Configuring your EFS filesystems to be backed up:
-* Add security group ID from output `security_group_id` to a security group of EFS Filesystems
+* Add security group ID from output `efs_backup_security_group`
+to a security group of EFS Filesystems
 
 
