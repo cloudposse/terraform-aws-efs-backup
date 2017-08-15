@@ -33,7 +33,7 @@ variable "efs_id" {
   default = ""
 }
 
-variable "efs_mtid" {
+variable "efs_mount_target_id" {
   default = ""
 }
 
