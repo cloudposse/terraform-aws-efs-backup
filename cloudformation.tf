@@ -8,15 +8,14 @@ resource "aws_cloudformation_stack" "sns" {
 }
 
 resource "aws_cloudformation_stack" "datapipeline" {
-  count         = "${length(var.efs_ids)}"
-  name          = "${module.label.id}-${count.index}"
+  name          = "${module.label.id}"
   template_body = "${file("${path.module}/templates/datapipeline.yml")}"
 
   parameters {
     myInstanceType             = "${var.datapipeline_config["instance_type"]}"
-    mySubnetId                 = "${data.aws_subnet_ids.default.ids[0]}"
-    mySecurityGroupId          = "${aws_security_group.datapipeline.id}"
-    myEFSId                    = "${data.aws_efs_file_system.default.*.id[count.index]}"
+    mySubnetId                 = "${data.aws_efs_mount_target.default.subnet_id}"
+    mySecurityGroupId          = "${data.aws_efs_mount_target.default.security_groups}"
+    myEFSId                    = "${data.aws_efs_mount_target.default.file_system_id}"
     myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
     myRegion                   = "${var.region}"
     myImageId                  = "${data.aws_ami.amazon_linux.id}"
@@ -26,6 +25,6 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myDataPipelineRole         = "${aws_iam_role.role.name}"
     myKeyPair                  = "${var.ssh_key_pair}"
     myPeriod                   = "${var.datapipeline_config["period"]}"
-    Tag                        = "${module.label.id}-${count.index}"
+    Tag                        = "${module.label.id}"
   }
 }
