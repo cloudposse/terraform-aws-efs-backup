@@ -23,7 +23,7 @@ module "efs_backup" {
   namespace                          = "${var.namespace}"
   region                             = "${var.region}"
   vpc_id                             = "${var.vpc_id}"
-  efs_ids                            = "${var.efs_ids}"
+  efs_mount_target_id                = "${var.efs_mount_target_id}"
   noncurrent_version_expiration_days = "${var.noncurrent_version_expiration_days}"
   ssh_key_pair                       = "${var.ssh_key_pair}"
 
@@ -35,10 +35,6 @@ module "efs_backup" {
     )}"
 }
 
-
-output "efs_backup_security_group" {
-  value = "${module.efs_backup.security_group_id}"
-}
 ```
 
 
@@ -51,18 +47,13 @@ output "efs_backup_security_group" {
 | name                         | ``             | Name  (e.g. `efs-backup`)                                | Yes      |
 | region                       | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)| Yes      |
 | vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes   |
-| efs_ids                      | []             | List of EFS ID                                           | Yes      |
+| efs_mount_target_id          |                | Elastic File System Mount Target (EFS)                   | Yes      |
 | noncurrent_version_expiration_days| `3`       | S3 object versions expiration period (days)              | Yes      |
 | ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes     |
 | instance_type                | `t2.micro`     | Instance type to use                                     | No       |
 | email                        | ``             | Email to use in SNS                                      | Yes      |
 | period                       | `24 hours`     | Frequency of pipeline execution                          | No       |
 
-
-
-## Configuring your EFS filesystems to be backed up:
-* Add security group ID from output `efs_backup_security_group`
-to a security group of EFS Filesystems
 
 
 ## References
