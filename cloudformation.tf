@@ -1,5 +1,12 @@
+module "sns_label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
+  namespace = "${var.namespace}"
+  stage     = "${var.stage}"
+  name      = "${var.name}-sns"
+}
+
 resource "aws_cloudformation_stack" "sns" {
-  name          = "${module.label.id}"
+  name          = "${module.sns_label.id}"
   template_body = "${file("${path.module}/templates/sns.yml")}"
 
   parameters {
@@ -7,16 +14,22 @@ resource "aws_cloudformation_stack" "sns" {
   }
 }
 
+module "datapipeline_label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
+  namespace = "${var.namespace}"
+  stage     = "${var.stage}"
+  name      = "${var.name}-datapipeline"
+}
+
 resource "aws_cloudformation_stack" "datapipeline" {
-  count         = "${length(var.efs_ids)}"
-  name          = "${module.label.id}-${count.index}"
+  name          = "${module.datapipeline_label.id}"
   template_body = "${file("${path.module}/templates/datapipeline.yml")}"
 
   parameters {
     myInstanceType             = "${var.datapipeline_config["instance_type"]}"
     mySubnetId                 = "${data.aws_subnet_ids.default.ids[0]}"
     mySecurityGroupId          = "${aws_security_group.datapipeline.id}"
-    myEFSId                    = "${data.aws_efs_file_system.default.*.id[count.index]}"
+    myEFSId                    = "${data.aws_efs_file_system.default.id}"
     myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
     myRegion                   = "${var.region}"
     myImageId                  = "${data.aws_ami.amazon_linux.id}"
@@ -26,6 +39,6 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myDataPipelineRole         = "${aws_iam_role.role.name}"
     myKeyPair                  = "${var.ssh_key_pair}"
     myPeriod                   = "${var.datapipeline_config["period"]}"
-    Tag                        = "${module.label.id}-${count.index}"
+    Tag                        = "${module.label.id}"
   }
 }

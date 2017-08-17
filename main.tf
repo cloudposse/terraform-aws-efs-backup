@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 0.9.1"
+  required_version = ">= 0.9.1"
 }
 
 provider "aws" {
@@ -12,8 +12,6 @@ module "label" {
   stage     = "${var.stage}"
   name      = "${var.name}"
 }
-
-//data "aws_availability_zones" "default" {}
 
 data "aws_ami" "amazon_linux" {
   most_recent = true
