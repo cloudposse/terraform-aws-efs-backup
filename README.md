@@ -23,16 +23,11 @@ module "efs_backup" {
   namespace                          = "${var.namespace}"
   region                             = "${var.region}"
   vpc_id                             = "${var.vpc_id}"
-  efs_ids                            = "${var.efs_ids}"
+  efs_mount_target_id                = "${var.efs_mount_target_id}"
   noncurrent_version_expiration_days = "${var.noncurrent_version_expiration_days}"
   ssh_key_pair                       = "${var.ssh_key_pair}"
-
-  datapipeline_config = "${map(
-    "instance_type", "t2.micro",
-    "email", "",
-    "timezone", "GMT",
-    "period", "24 hours"
-    )}"
+  datapipeline_config                = "${var.datapipeline_config}"
+  change_security_group              = true
 }
 
 
@@ -51,7 +46,8 @@ output "efs_backup_security_group" {
 | name                         | ``             | Name  (e.g. `efs-backup`)                                | Yes      |
 | region                       | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)| Yes      |
 | vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes   |
-| efs_ids                      | []             | List of EFS ID                                           | Yes      |
+| efs_mount_target_id	       | ``             | Elastic File System Mount Target (EFS)                   | Yes      |
+| change_security_group	       | `false`        | Should the module modify security groups                 | No       |
 | noncurrent_version_expiration_days| `3`       | S3 object versions expiration period (days)              | Yes      |
 | ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes     |
 | instance_type                | `t2.micro`     | Instance type to use                                     | No       |

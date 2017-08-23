@@ -29,9 +29,12 @@ variable "datapipeline_config" {
   }
 }
 
-variable "efs_id" {
-
+variable "efs_mount_target_id" {
   default = ""
+}
+
+variable "change_security_group" {
+  default = false
 }
 
 # Set a name of ssh key that will be deployed on DataPipeline's instance. The key should be present in AWS.
