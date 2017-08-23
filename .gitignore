@@ -5,3 +5,6 @@ keys/*
 *tfstate*
 secrets.tfvars
 *.tfvars
+.terraform
+
+

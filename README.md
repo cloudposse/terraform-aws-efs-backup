@@ -47,7 +47,7 @@ output "efs_backup_security_group" {
 | region                       | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)| Yes      |
 | vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes   |
 | efs_mount_target_id	       | ``             | Elastic File System Mount Target (EFS)                   | Yes      |
-| change_security_group	       | `false`        | Should the module modify security groups                 | No       |
+| change_security_group	       | `false`        | Should the module modify EFS security groups                 | No       |
 | noncurrent_version_expiration_days| `3`       | S3 object versions expiration period (days)              | Yes      |
 | ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes     |
 | instance_type                | `t2.micro`     | Instance type to use                                     | No       |
