@@ -33,7 +33,7 @@ variable "efs_mount_target_id" {
   default = ""
 }
 
-variable "change_security_group" {
+variable "modify_security_group" {
   default = false
 }
 
