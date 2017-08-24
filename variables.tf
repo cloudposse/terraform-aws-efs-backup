@@ -24,14 +24,16 @@ variable "datapipeline_config" {
   default = {
     instance_type = "t2.micro"
     email         = ""
-    timezone      = "GMT"
     period        = "24 hours"
   }
 }
 
-variable "efs_id" {
-
+variable "efs_mount_target_id" {
   default = ""
+}
+
+variable "modify_security_group" {
+  default = false
 }
 
 # Set a name of ssh key that will be deployed on DataPipeline's instance. The key should be present in AWS.

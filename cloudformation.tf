@@ -29,7 +29,7 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myInstanceType             = "${var.datapipeline_config["instance_type"]}"
     mySubnetId                 = "${data.aws_subnet_ids.default.ids[0]}"
     mySecurityGroupId          = "${aws_security_group.datapipeline.id}"
-    myEFSId                    = "${data.aws_efs_file_system.default.id}"
+    myEFSId                    = "${data.aws_efs_mount_target.default.file_system_id}"
     myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
     myRegion                   = "${var.region}"
     myImageId                  = "${data.aws_ami.amazon_linux.id}"

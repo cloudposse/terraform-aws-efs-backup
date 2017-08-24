@@ -1,4 +1,4 @@
-# Get list of EFS ids
-data "aws_efs_file_system" "default" {
-  file_system_id = "${var.efs_id}"
+# Get Elastic File System Mount Target (EFS)
+data "aws_efs_mount_target" "default" {
+  mount_target_id = "${var.efs_mount_target_id}"
 }
