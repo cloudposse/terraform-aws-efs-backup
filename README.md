@@ -39,20 +39,20 @@ output "efs_backup_security_group" {
 
 ## Variables
 
-|  Name                        |  Default       |  Description                                             | Required |
-|:----------------------------:|:--------------:|:--------------------------------------------------------:|:--------:|
-| namespace                    | ``             | Namespace (e.g. `cp` or `cloudposse`)                    | Yes      |
-| stage                        | ``             | Stage (e.g. `prod`, `dev`, `staging`                     | Yes      |
-| name                         | ``             | Name  (e.g. `efs-backup`)                                | Yes      |
-| region                       | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)| Yes      |
-| vpc_id                       | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes   |
-| efs_mount_target_id	       | ``             | Elastic File System Mount Target (EFS)                   | Yes      |
-| modify_security_group	       | `false`        | Should the module modify EFS security groups             | No       |
-| noncurrent_version_expiration_days| `3`       | S3 object versions expiration period (days)              | Yes      |
-| ssh_key_pair                 | ``             | A ssh key that will be deployed on DataPipeline's instance| Yes     |
-| instance_type                | `t2.micro`     | Instance type to use                                     | No       |
-| email                        | ``             | Email to use in SNS                                      | Yes      |
-| period                       | `24 hours`     | Frequency of pipeline execution                          | No       |
+|  Name                             |  Default       |  Description                                                | Required |
+|:---------------------------------:|:--------------:|:-----------------------------------------------------------:|:--------:|
+| namespace                         | ``             | Namespace (e.g. `cp` or `cloudposse`)                       | Yes      |
+| stage                             | ``             | Stage (e.g. `prod`, `dev`, `staging`                        | Yes      |
+| name                              | ``             | Name  (e.g. `efs-backup`)                                   | Yes      |
+| region                            | `us-east-1`    | AWS Region where module should operate (e.g. `us-east-1`)   | Yes      |
+| vpc_id                            | ``             | AWS VPC ID where module should operate (e.g. `vpc-a22222ee`)| Yes      |
+| efs_mount_target_id	            | ``             | Elastic File System Mount Target ID (e.g. `fsmt-279bfc62`)  | Yes      |
+| modify_security_group	            | `false`        | Should the module modify EFS security groups                | No       |
+| noncurrent_version_expiration_days| `3`            | S3 object versions expiration period (days)                 | Yes      |
+| ssh_key_pair                      | ``             | A ssh key that will be deployed on DataPipeline's instance  | Yes      |
+| instance_type                     | `t2.micro`     | Instance type to use                                        | No       |
+| email                             | ``             | Email to use in SNS                                         | Yes      |
+| period                            | `24 hours`     | Frequency of pipeline execution                             | No       |
 
 
 
@@ -62,5 +62,4 @@ to a security group of EFS Filesystems
 
 
 ## References
-* Thanks https://github.com/knakayama/datapipeline-efs-backup-demo for
-inspiration
+* Thanks https://github.com/knakayama/datapipeline-efs-backup-demo for inspiration
