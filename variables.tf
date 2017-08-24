@@ -24,7 +24,6 @@ variable "datapipeline_config" {
   default = {
     instance_type = "t2.micro"
     email         = ""
-    timezone      = "GMT"
     period        = "24 hours"
   }
 }
