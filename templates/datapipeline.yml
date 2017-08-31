@@ -103,7 +103,7 @@ Resources:
                 region="$2"
                 destination="$3"
                 efs_ip="$4"
-                if [[ -n ${efs_ip} ]]; then
+                if [[ ! "${efs_ip}" == 0 ]]; then
                   source="${efs_ip}"
                 else
                   source="${efs_id}.efs.${region}.amazonaws.com"
@@ -234,7 +234,7 @@ Resources:
             - Key: type
               StringValue: String
             - Key: default
-              StringValue: ""
+              StringValue: None
             - Key: description
               StringValue: EFS IP for the cases when EFS domain name is not resolved.
         - Id: myImageId
