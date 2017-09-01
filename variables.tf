@@ -8,7 +8,9 @@ variable "region" {}
 
 variable "vpc_id" {}
 
-variable "efs_host" {}
+variable "use_ip_address" {
+  default = false
+}
 
 variable "datapipeline_config" {
   type = "map"
