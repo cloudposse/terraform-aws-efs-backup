@@ -11,11 +11,9 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   myInstanceType:
     Type: String
-  myEFSId:
+  myEFSHost:
     Type: String
   myRegion:
-    Type: String
-  myEFSIP:
     Type: String
   myImageId:
     Type: AWS::EC2::Image::Id
@@ -99,31 +97,23 @@ Resources:
               RefValue: EC2ResourceObj
             - Key: command
               StringValue: |
-                efs_id="$1"
+                source="$1"
                 region="$2"
                 destination="$3"
-                efs_ip="$4"
-                if [[ ! "${efs_ip}" == 0 ]]; then
-                  source="${efs_ip}"
-                else
-                  source="${efs_id}.efs.${region}.amazonaws.com"
-                fi
                 sudo yum -y install nfs-utils
                 [[ -d /backup ]] || sudo mkdir /backup
                 if ! mount -l -t nfs4 | grep -qF $source; then
                   sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$source":/ /backup
                 fi
-                sudo aws s3 sync --delete --exact-timestamps /backup/ s3://$destination/${efs_id}/
+                sudo aws s3 sync --delete --exact-timestamps /backup/ s3://$destination/
                 backup_status="$?"
                 exit "$backup_status"
             - Key: scriptArgument
-              StringValue: "#{myEFSId}"
+              StringValue: "#{myEFSHost}"
             - Key: scriptArgument
               StringValue: "#{myRegion}"
             - Key: scriptArgument
               StringValue: "#{myS3BackupsBucket}"
-            - Key: scriptArgument
-              StringValue: "#{myEFSIP}"
             - Key: onSuccess
               RefValue: SuccessNotify
             - Key: onFail
@@ -205,7 +195,7 @@ Resources:
               StringValue: sg-1111111b
             - Key: description
               StringValue: Security group that can connect to the Production/Backup EFS mount point.
-        - Id: myEFSId
+        - Id: myEFSHost
           Attributes:
             - Key: type
               StringValue: String
@@ -229,14 +219,6 @@ Resources:
               StringValue: s3://efs-backups
             - Key: description
               StringValue: S3 Backup Bucket
-        - Id: myEFSIP
-          Attributes:
-            - Key: type
-              StringValue: String
-            - Key: default
-              StringValue: None
-            - Key: description
-              StringValue: EFS IP for the cases when EFS domain name is not resolved.
         - Id: myImageId
           Attributes:
             - Key: type
@@ -300,10 +282,8 @@ Resources:
           StringValue: !Ref mySubnetId
         - Id: mySecurityGroupId
           StringValue: !Ref mySecurityGroupId
-        - Id: myEFSId
-          StringValue: !Ref myEFSId
-        - Id: myEFSIP
-          StringValue: !Ref myEFSIP
+        - Id: myEFSHost
+          StringValue: !Ref myEFSHost
         - Id: myRegion
           StringValue: !Ref myRegion
         - Id: myS3BackupsBucket

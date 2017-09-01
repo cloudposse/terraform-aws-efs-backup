@@ -8,6 +8,8 @@ variable "region" {}
 
 variable "vpc_id" {}
 
+variable "efs_host" {}
+
 variable "datapipeline_config" {
   type = "map"
 
@@ -29,8 +31,4 @@ variable "ssh_key_pair" {}
 
 variable "noncurrent_version_expiration_days" {
   default = "35"
-}
-
-variable "efs_ip" {
-  default = false
 }
