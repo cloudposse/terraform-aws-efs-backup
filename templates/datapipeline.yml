@@ -66,7 +66,7 @@ Resources:
             - Key: type
               StringValue: Ec2Resource
             - Key: terminateAfter
-              StringValue: "30 Minutes"
+              StringValue: "#{myExecutionTimeout}"
             - Key: instanceType
               StringValue: "#{myInstanceType}"
             - Key: securityGroupIds
@@ -179,6 +179,13 @@ Resources:
               StringValue: c3.4xlarge
             - Key: allowedValues
               StringValue: c3.8xlarge
+        - Id: myExecutionTimeout
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: 360 Minutes
+            - Key: description
+              StringValue: Terminate the resource after this period.
         - Id: mySubnetId
           Attributes:
             - Key: type
@@ -278,6 +285,8 @@ Resources:
       ParameterValues:
         - Id: myInstanceType
           StringValue: !Ref myInstanceType
+        - Id: myExecutionTimeout
+          StringValue: !Ref myExecutionTimeout
         - Id: mySubnetId
           StringValue: !Ref mySubnetId
         - Id: mySecurityGroupId
