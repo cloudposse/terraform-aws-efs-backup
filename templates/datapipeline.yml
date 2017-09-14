@@ -31,6 +31,8 @@ Parameters:
     Type: String
   myPeriod:
     Type: String
+  myExecutionTimeout:
+    Type: String
 
 
 Resources:
@@ -180,10 +182,11 @@ Resources:
             - Key: allowedValues
               StringValue: c3.8xlarge
         - Id: myExecutionTimeout
+          Attributes:
             - Key: type
               StringValue: String
             - Key: default
-              StringValue: 360 Minutes
+              StringValue: "360 Minutes"
             - Key: description
               StringValue: Terminate the resource after this period.
         - Id: mySubnetId
