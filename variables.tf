@@ -19,6 +19,7 @@ variable "datapipeline_config" {
     instance_type = "t2.micro"
     email         = ""
     period        = "24 hours"
+    timeout       = "60 Minutes"
   }
 }
 
