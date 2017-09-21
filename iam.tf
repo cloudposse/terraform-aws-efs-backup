@@ -12,10 +12,11 @@ data "aws_iam_policy_document" "resource_role" {
 }
 
 module "resource_role_label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
-  namespace = "${var.namespace}"
-  stage     = "${var.stage}"
-  name      = "${var.name}-resource-role"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  name       = "${var.name}"
+  attributes = ["resource-role"]
 }
 
 resource "aws_iam_role" "resource_role" {
@@ -51,10 +52,11 @@ data "aws_iam_policy_document" "role" {
 }
 
 module "role_label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
-  namespace = "${var.namespace}"
-  stage     = "${var.stage}"
-  name      = "${var.name}-role"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  name       = "${var.name}"
+  attributes = ["role"]
 }
 
 resource "aws_iam_role" "role" {

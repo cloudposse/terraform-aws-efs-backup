@@ -1,8 +1,9 @@
 module "sns_label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
-  namespace = "${var.namespace}"
-  stage     = "${var.stage}"
-  name      = "${var.name}-sns"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  name       = "${var.name}"
+  attributes = ["sns"]
 }
 
 resource "aws_cloudformation_stack" "sns" {
@@ -15,10 +16,11 @@ resource "aws_cloudformation_stack" "sns" {
 }
 
 module "datapipeline_label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=0.1.0"
-  namespace = "${var.namespace}"
-  stage     = "${var.stage}"
-  name      = "${var.name}-datapipeline"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  name       = "${var.name}"
+  attributes = ["datapipeline"]
 }
 
 resource "aws_cloudformation_stack" "datapipeline" {

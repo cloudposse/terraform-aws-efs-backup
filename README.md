@@ -1,6 +1,6 @@
-# tf_efs_backup
+# terraform-aws-efs-backup
 
-This repo contains a terraform module for automatic EFS backup
+Terraform module designed to easily backup EFS filesystems to S3 using DataPipeline.
 
 The workflow is simple:
 * Periodically launch resource (EC2 instance) based on schedule
@@ -12,11 +12,11 @@ The workflow is simple:
 
 ## Usage
 
-Include this repository as a module in your existing terraform code:
+Include this module in your existing terraform code:
 
-```
+```hcl
 module "efs_backup" {
-  source = "git::https://github.com/cloudposse/tf_efs_backup.git?ref=master"
+  source = "git::https://github.com/cloudposse/terraform-aws-efs-backup.git?ref=master"
 
   name                               = "${var.name}"
   stage                              = "${var.stage}"
@@ -63,10 +63,12 @@ output "efs_backup_security_group" {
 
 
 
-## Configuring your EFS filesystems to be backed up:
-* Add security group ID from output `efs_backup_security_group`
-to a security group of EFS Filesystems
+## Integration with EFS
 
+It's necessary to configure your EFS filesystem security groups to permit backups from the DataPipeline instances.
+
+Add the security group ID from the `efs_backup_security_group` output to a security group of EFS Filesystems.
 
 ## References
+
 * Thanks https://github.com/knakayama/datapipeline-efs-backup-demo for inspiration
