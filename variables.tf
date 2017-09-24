@@ -8,8 +8,10 @@ variable "region" {}
 
 variable "vpc_id" {}
 
+# https://www.terraform.io/docs/configuration/variables.html
+# simply using string values rather than booleans for variables is recommended
 variable "use_ip_address" {
-  default = false
+  default = "false"
 }
 
 variable "datapipeline_config" {

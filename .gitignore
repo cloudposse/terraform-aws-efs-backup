@@ -6,3 +6,5 @@ keys/*
 secrets.tfvars
 *.tfvars
 .terraform
+.idea
+*.iml
