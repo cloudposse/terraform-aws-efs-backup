@@ -1,6 +1,6 @@
 # terraform-aws-efs-backup
 
-Terraform module designed to easily backup EFS filesystems to S3 using DataPipeline.
+Terraform module designed to easily backup `EFS` filesystems to `S3` using `DataPipeline`.
 
 The workflow is simple:
 * Periodically launch resource (EC2 instance) based on schedule
@@ -9,6 +9,7 @@ The workflow is simple:
 * The execution log of the activity is stored in S3
 * Publish to the SNS topic that defined the success or failure of the activity
 * Automatic backup rotation using `S3 lifecycle rule`
+
 
 ## Usage
 
@@ -24,11 +25,11 @@ module "efs_backup" {
   region                             = "${var.region}"
   vpc_id                             = "${var.vpc_id}"
   efs_mount_target_id                = "${var.efs_mount_target_id}"
-  use_ip_address                     = true
+  use_ip_address                     = "true"
   noncurrent_version_expiration_days = "${var.noncurrent_version_expiration_days}"
   ssh_key_pair                       = "${var.ssh_key_pair}"
   datapipeline_config                = "${var.datapipeline_config}"
-  modify_security_group              = true
+  modify_security_group              = "true"
 }
 
 output "efs_backup_security_group" {
@@ -40,7 +41,7 @@ output "efs_backup_security_group" {
 ## Variables
 
 |  Name                              |  Default       |  Description                                                                        | Required |
-|:----------------------------------:|:--------------:|:-----------------------------------------------------------------------------------:|:--------:|
+|:-----------------------------------|:--------------:|:------------------------------------------------------------------------------------|:--------:|
 | namespace                          | ``             | Namespace (e.g. `cp` or `cloudposse`)                                               | Yes      |
 | stage                              | ``             | Stage (e.g. `prod`, `dev`, `staging`)                                               | Yes      |
 | name                               | ``             | Name  (e.g. `efs-backup`)                                                           | Yes      |
@@ -56,7 +57,7 @@ output "efs_backup_security_group" {
 ### `datapipeline_config` variables
 
 |  Name                              |  Default       |  Description                                                | Required |
-|:----------------------------------:|:--------------:|:-----------------------------------------------------------:|:--------:|
+|:-----------------------------------|:--------------:|:------------------------------------------------------------|:--------:|
 | instance_type                      | `t2.micro`     | Instance type to use                                        | Yes      |
 | email                              | ``             | Email to use in SNS                                         | Yes      |
 | period                             | `24 hours`     | Frequency of pipeline execution (frequency of backups)      | Yes      |
@@ -69,6 +70,12 @@ It's necessary to configure your EFS filesystem security groups to permit backup
 
 Add the security group ID from the `efs_backup_security_group` output to a security group of EFS Filesystems.
 
+
 ## References
 
 * Thanks https://github.com/knakayama/datapipeline-efs-backup-demo for inspiration
+
+
+## License
+
+Apache 2 License. See [`LICENSE`](LICENSE) for full details.
