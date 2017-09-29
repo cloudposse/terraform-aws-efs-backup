@@ -74,15 +74,6 @@ output "efs_backup_security_group" {
 
 To enable connectivity between the `DataPipeline` instances and the `EFS`, use one of the following methods to configure Security Groups:
 
-**NOTE:** Do not mix these two methods together. 
-`Terraform` does not support using a Security Group with in-line rules in conjunction with any Security Group Rule resources.
-https://www.terraform.io/docs/providers/aws/r/security_group_rule.html
-> NOTE on Security Groups and Security Group Rules: Terraform currently provides both a standalone Security Group Rule resource 
-(a single ingress or egress rule), and a Security Group resource with ingress and egress rules defined in-line. 
-At this time you cannot use a Security Group with in-line rules in conjunction with any Security Group Rule resources. 
-Doing so will cause a conflict of rule settings and will overwrite rules.
-
-
 1. Explicitly add the `DataPipeline` SG (the output of this module `security_group_id`) to the list of the `ingress` rules of the `EFS` SG
 
 For example:
@@ -127,6 +118,14 @@ module "efs_backup" {
 ```
 
 2. Set `modify_security_group` attribute to `true` so the module will modify the `EFS` SG to allow the `DataPipeline` to connect to the `EFS`
+
+**NOTE:** Do not mix these two methods together. 
+`Terraform` does not support using a Security Group with in-line rules in conjunction with any Security Group Rule resources.
+https://www.terraform.io/docs/providers/aws/r/security_group_rule.html
+> NOTE on Security Groups and Security Group Rules: Terraform currently provides both a standalone Security Group Rule resource 
+(a single ingress or egress rule), and a Security Group resource with ingress and egress rules defined in-line. 
+At this time you cannot use a Security Group with in-line rules in conjunction with any Security Group Rule resources. 
+Doing so will cause a conflict of rule settings and will overwrite rules.
 
 
 ## References
