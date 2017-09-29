@@ -74,9 +74,7 @@ output "efs_backup_security_group" {
 
 To enable connectivity between the `DataPipeline` instances and the `EFS`, use one of the following methods to configure Security Groups:
 
-1. Explicitly add the `DataPipeline` SG (the output of this module `security_group_id`) to the list of the `ingress` rules of the `EFS` SG
-
-For example:
+1. Explicitly add the `DataPipeline` SG (the output of this module `security_group_id`) to the list of the `ingress` rules of the `EFS` SG. For example:
 
 ```hcl
 module "elastic_beanstalk_environment" {
