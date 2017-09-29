@@ -3,7 +3,9 @@ module "logs_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["logs"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("logs")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_s3_bucket" "logs" {
@@ -17,7 +19,9 @@ module "backups_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["backups"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("backups")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_s3_bucket" "backups" {

@@ -3,7 +3,9 @@ module "sns_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["sns"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("sns")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_cloudformation_stack" "sns" {
@@ -13,6 +15,8 @@ resource "aws_cloudformation_stack" "sns" {
   parameters {
     Email = "${var.datapipeline_config["email"]}"
   }
+
+  tags = "${module.sns_label.tags}"
 }
 
 module "datapipeline_label" {
@@ -20,7 +24,9 @@ module "datapipeline_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["datapipeline"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("datapipeline")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_cloudformation_stack" "datapipeline" {
@@ -44,4 +50,6 @@ resource "aws_cloudformation_stack" "datapipeline" {
     Tag                        = "${module.label.id}"
     myExecutionTimeout         = "${var.datapipeline_config["timeout"]}"
   }
+
+  tags = "${module.datapipeline_label.tags}"
 }
