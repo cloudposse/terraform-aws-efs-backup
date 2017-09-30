@@ -37,7 +37,7 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myInstanceType             = "${var.datapipeline_config["instance_type"]}"
     mySubnetId                 = "${data.aws_subnet_ids.default.ids[0]}"
     mySecurityGroupId          = "${aws_security_group.datapipeline.id}"
-    myEFSHost                  = "${var.use_ip_address ? data.aws_efs_mount_target.default.ip_address : data.aws_efs_mount_target.default.dns_name }"
+    myEFSHost                  = "${var.use_ip_address ? data.aws_efs_mount_target.default.ip_address : format("%s.efs.%s.amazonaws.com", data.aws_efs_mount_target.default.file_system_id, var.region) }"
     myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
     myRegion                   = "${var.region}"
     myImageId                  = "${data.aws_ami.amazon_linux.id}"

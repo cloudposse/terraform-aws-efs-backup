@@ -1,12 +1,22 @@
-variable "name" {}
+variable "name" {
+  type = "string"
+}
 
-variable "namespace" {}
+variable "namespace" {
+  type = "string"
+}
 
-variable "stage" {}
+variable "stage" {
+  type = "string"
+}
 
-variable "region" {}
+variable "region" {
+  type = "string"
+}
 
-variable "vpc_id" {}
+variable "vpc_id" {
+  type = "string"
+}
 
 # https://www.terraform.io/docs/configuration/variables.html
 # simply using string values rather than booleans for variables is recommended
@@ -25,14 +35,19 @@ variable "datapipeline_config" {
   }
 }
 
-variable "efs_mount_target_id" {}
+variable "efs_mount_target_id" {
+  type        = "string"
+  description = "EFS Mount Target ID (e.g. `fsmt-279bfc62`)"
+}
 
 variable "modify_security_group" {
   default = "false"
 }
 
 # Set a name of ssh key that will be deployed on DataPipeline's instance. The key should be present in AWS.
-variable "ssh_key_pair" {}
+variable "ssh_key_pair" {
+  type = "string"
+}
 
 variable "noncurrent_version_expiration_days" {
   default = "35"
@@ -47,7 +62,7 @@ variable "delimiter" {
 variable "attributes" {
   type        = "list"
   default     = []
-  description = "Additional attributes (e.g. `policy` or `role`)"
+  description = "Additional attributes (e.g. `efs-backup`)"
 }
 
 variable "tags" {
