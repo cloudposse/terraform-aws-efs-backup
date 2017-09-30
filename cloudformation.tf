@@ -3,7 +3,9 @@ module "sns_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["sns"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("sns")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_cloudformation_stack" "sns" {
@@ -13,6 +15,8 @@ resource "aws_cloudformation_stack" "sns" {
   parameters {
     Email = "${var.datapipeline_config["email"]}"
   }
+
+  tags = "${module.sns_label.tags}"
 }
 
 module "datapipeline_label" {
@@ -20,7 +24,9 @@ module "datapipeline_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["datapipeline"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("datapipeline")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_cloudformation_stack" "datapipeline" {
@@ -31,9 +37,9 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myInstanceType             = "${var.datapipeline_config["instance_type"]}"
     mySubnetId                 = "${data.aws_subnet_ids.default.ids[0]}"
     mySecurityGroupId          = "${aws_security_group.datapipeline.id}"
-    myEFSHost                  = "${var.use_ip_address ? data.aws_efs_mount_target.default.ip_address : data.aws_efs_mount_target.default.dns_name }"
+    myEFSHost                  = "${var.use_ip_address ? data.aws_efs_mount_target.default.ip_address : format("%s.efs.%s.amazonaws.com", data.aws_efs_mount_target.default.file_system_id, (signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name))}"
     myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
-    myRegion                   = "${var.region}"
+    myRegion                   = "${signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name}"
     myImageId                  = "${data.aws_ami.amazon_linux.id}"
     myTopicArn                 = "${aws_cloudformation_stack.sns.outputs["TopicArn"]}"
     myS3LogBucket              = "${aws_s3_bucket.logs.id}"
@@ -44,4 +50,6 @@ resource "aws_cloudformation_stack" "datapipeline" {
     Tag                        = "${module.label.id}"
     myExecutionTimeout         = "${var.datapipeline_config["timeout"]}"
   }
+
+  tags = "${module.datapipeline_label.tags}"
 }

@@ -16,7 +16,9 @@ module "resource_role_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["resource-role"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("resource-role")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_iam_role" "resource_role" {
@@ -56,7 +58,9 @@ module "role_label" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
-  attributes = ["role"]
+  delimiter  = "${var.delimiter}"
+  attributes = ["${compact(concat(var.attributes, list("role")))}"]
+  tags       = "${var.tags}"
 }
 
 resource "aws_iam_role" "role" {
