@@ -11,7 +11,9 @@ variable "stage" {
 }
 
 variable "region" {
-  type = "string"
+  type        = "string"
+  default     = ""
+  description = "(Optional) AWS Region. If not specified, will be derived from 'aws_region' data source"
 }
 
 variable "vpc_id" {

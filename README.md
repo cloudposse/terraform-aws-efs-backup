@@ -23,7 +23,6 @@ module "efs_backup" {
   name                               = "${var.name}"
   stage                              = "${var.stage}"
   namespace                          = "${var.namespace}"
-  region                             = "${var.region}"
   vpc_id                             = "${var.vpc_id}"
   efs_mount_target_id                = "${var.efs_mount_target_id}"
   use_ip_address                     = "false"
@@ -46,7 +45,7 @@ output "efs_backup_security_group" {
 | namespace                          | ``             | Namespace (e.g. `cp` or `cloudposse`)                                                         | Yes      |
 | stage                              | ``             | Stage (e.g. `prod`, `dev`, `staging`)                                                         | Yes      |
 | name                               | ``             | Name  (e.g. `app` or `wordpress`)                                                             | Yes      |
-| region                             | `us-east-1`    | AWS Region to provision the AWS resources in (_e.g._ `us-east-1`)                             | Yes      |
+| region                             | `us-east-1`    | (Optional) AWS Region. If not specified, will be derived from 'aws_region' data source        | No       |
 | vpc_id                             | ``             | AWS VPC ID where module should operate (_e.g._ `vpc-a22222ee`)                                | Yes      |
 | efs_mount_target_id                | ``             | Elastic File System Mount Target ID (_e.g._ `fsmt-279bfc62`)                                  | Yes      |
 | use_ip_address                     | `false`        | If set to `true`, will use IP address instead of DNS name to connect to the `EFS`             | Yes      |

@@ -3,7 +3,11 @@ terraform {
 }
 
 provider "aws" {
-  region = "${var.region}"
+  region = "${signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name}"
+}
+
+data "aws_region" "default" {
+  current = true
 }
 
 module "label" {
