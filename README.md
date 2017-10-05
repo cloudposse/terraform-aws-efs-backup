@@ -60,12 +60,12 @@ output "efs_backup_security_group" {
 
 ### `datapipeline_config` variables
 
-|  Name                              |  Default       |  Description                                                | Required |
-|:-----------------------------------|:--------------:|:------------------------------------------------------------|:--------:|
-| instance_type                      | `t2.micro`     | Instance type to use                                        | Yes      |
-| email                              | ``             | Email to use in `SNS`                                       | Yes      |
-| period                             | `24 hours`     | Frequency of pipeline execution (frequency of backups)      | Yes      |
-| timeout                            | `60 Minutes`   | Pipeline execution timeout                                  | Yes      |
+|  Name                              |  Default       |  Description                                                                 | Required |
+|:-----------------------------------|:--------------:|:-----------------------------------------------------------------------------|:--------:|
+| instance_type                      | `t2.micro`     | Instance type to use                                                         | Yes      |
+| email                              | ``             | Email to use in `SNS`. Needs to be provided, otherwise the module will fail  | Yes      |
+| period                             | `24 hours`     | Frequency of pipeline execution (frequency of backups)                       | Yes      |
+| timeout                            | `60 Minutes`   | Pipeline execution timeout                                                   | Yes      |
 
 
 

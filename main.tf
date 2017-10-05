@@ -1,11 +1,3 @@
-terraform {
-  required_version = ">= 0.9.1"
-}
-
-provider "aws" {
-  region = "${signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name}"
-}
-
 data "aws_region" "default" {
   current = true
 }
