@@ -109,6 +109,14 @@ Resources:
                 fi
                 sudo aws s3 sync --delete --exact-timestamps /backup/ s3://$destination/
                 backup_status="$?"
+                # Return code 2 means that the following were skipped:
+                # files/symlinks that do not exist, files that are character special devices, block special device, FIFO's, or sockets, and files that the user cannot read from
+                # We need to return 0 in this case for the pipeline to succeed because all normal files were synched successfully
+                # http://docs.aws.amazon.com/cli/latest/topic/return-codes.html
+                # https://github.com/aws/aws-cli/issues/1125
+                if [ "$backup_status" -eq "2" ]; then
+                  backup_status="0"
+                fi
                 exit "$backup_status"
             - Key: scriptArgument
               StringValue: "#{myEFSHost}"
