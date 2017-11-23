@@ -5,7 +5,7 @@ data "aws_region" "default" {
 module "label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
   namespace  = "${var.namespace}"
-  stage      = "${var.stage}"
+  stage      = "${terraform.workspace}"
   name       = "${var.name}"
   delimiter  = "${var.delimiter}"
   attributes = "${var.attributes}"
@@ -13,8 +13,7 @@ module "label" {
 }
 
 data "aws_ami" "amazon_linux" {
-  most_recent = true
-  owners      = ["amazon"]
+  most_recent = "true"
 
   filter {
     name   = "architecture"
@@ -28,7 +27,7 @@ data "aws_ami" "amazon_linux" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-hvm-*"]
+    values = ["amazon_linux_mongo"]
   }
 
   filter {
