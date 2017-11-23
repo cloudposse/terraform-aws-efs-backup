@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: DataPipeline EFS Backup SNS Template
+Description: DataPipeline mongo Backup SNS Template
 
 Parameters:
   Email:
