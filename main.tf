@@ -13,8 +13,7 @@ module "label" {
 }
 
 data "aws_ami" "amazon_linux" {
-  most_recent = true
-  owners      = ["amazon"]
+  most_recent = "true"
 
   filter {
     name   = "architecture"
@@ -28,7 +27,7 @@ data "aws_ami" "amazon_linux" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-hvm-*"]
+    values = ["amazon_linux_mongo"]
   }
 
   filter {

@@ -22,8 +22,20 @@ variable "vpc_id" {
 
 # https://www.terraform.io/docs/configuration/variables.html
 # simply using string values rather than booleans for variables is recommended
-variable "use_ip_address" {
-  default = "false"
+variable "ip_address" {
+  default = ""
+}
+
+variable "security_group_id" {
+  default = ""
+}
+
+variable "dbuser" {
+  default = "string"
+}
+
+variable "dbpassword" {
+  default = "string"
 }
 
 variable "datapipeline_config" {
@@ -35,11 +47,6 @@ variable "datapipeline_config" {
     period        = "24 hours"
     timeout       = "60 Minutes"
   }
-}
-
-variable "efs_mount_target_id" {
-  type        = "string"
-  description = "EFS Mount Target ID (e.g. `fsmt-279bfc62`)"
 }
 
 variable "modify_security_group" {
@@ -64,7 +71,7 @@ variable "delimiter" {
 variable "attributes" {
   type        = "list"
   default     = []
-  description = "Additional attributes (e.g. `efs-backup`)"
+  description = "Additional attributes (e.g. `mongo-backup`)"
 }
 
 variable "tags" {

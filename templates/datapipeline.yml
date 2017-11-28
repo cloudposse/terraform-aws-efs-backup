@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: DataPipeline EFS Backup DataPipeline Template
+Description: DataPipeline MongoDB Backup DataPipeline Template
 
 Parameters:
   myS3BackupsBucket:
@@ -11,7 +11,11 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   myInstanceType:
     Type: String
-  myEFSHost:
+  myMongoHost:
+    Type: String
+  myDBuser:
+    Type: String
+  myDBpassword:
     Type: String
   myRegion:
     Type: String
@@ -36,11 +40,11 @@ Parameters:
 
 
 Resources:
-  DataPipelineEFSBackup:
+  DataPipelineMongoBackup:
     Type: AWS::DataPipeline::Pipeline
     Properties:
-      Name: DataPipelineEFSBackup
-      Description: DataPipeline EFS Backup
+      Name: DataPipelineMongoBackup
+      Description: DataPipeline MongoDB Backup
       PipelineTags:
         - Key: Name
           Value: !Ref Tag
@@ -102,11 +106,13 @@ Resources:
                 source="$1"
                 region="$2"
                 destination="$3"
-                sudo yum -y install nfs-utils
+                user="$4"
+                password="$5"
                 [[ -d /backup ]] || sudo mkdir /backup
-                if ! mount -l -t nfs4 | grep -qF $source; then
-                  sudo mount -t nfs -o nfsvers=4.1 -o rsize=1048576 -o wsize=1048576 -o timeo=600 -o retrans=2 -o hard "$source":/ /backup
-                fi
+                sudo yum-config-manager --add-repo https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/3.2/x86_64/
+                sudo rpm --import https://www.mongodb.org/static/pgp/server-3.2.asc
+                sudo yum -y install mongodb-org-tools
+                sudo mongodump -h $source:27017 -u $user -p $password -o /backup/
                 sudo aws s3 sync --delete --exact-timestamps /backup/ s3://$destination/
                 backup_status="$?"
                 # Return code 2 means that the following were skipped:
@@ -119,11 +125,15 @@ Resources:
                 fi
                 exit "$backup_status"
             - Key: scriptArgument
-              StringValue: "#{myEFSHost}"
+              StringValue: "#{myMongoHost}"
             - Key: scriptArgument
               StringValue: "#{myRegion}"
             - Key: scriptArgument
               StringValue: "#{myS3BackupsBucket}"
+            - Key: scriptArgument
+              StringValue: "#{myDBuser}"
+            - Key: scriptArgument
+              StringValue: "#{myDBpassword}"
             - Key: onSuccess
               RefValue: SuccessNotify
             - Key: onFail
@@ -136,7 +146,7 @@ Resources:
             - Key: topicArn
               StringValue: "#{myTopicArn}"
             - Key: subject
-              StringValue: "[Info] EFS Backup Succeeded"
+              StringValue: "[Info] MongoDB Backup Succeeded"
             - Key: message
               StringValue: |
                 scheduledStartTime: "#{node.@scheduledStartTime}"
@@ -151,7 +161,7 @@ Resources:
             - Key: topicArn
               StringValue: "#{myTopicArn}"
             - Key: subject
-              StringValue: "[Alart] EFS Backup Failed"
+              StringValue: "[Alart] MongoDB Backup Failed"
             - Key: message
               StringValue: |
                 scheduledStartTime: "#{node.@scheduledStartTime}"
@@ -204,7 +214,7 @@ Resources:
             - Key: default
               StringValue: subnet-1234abcd
             - Key: description
-              StringValue: VPC subnet for your restoration EC2 instance (ideally the same subnet used for the backup EFS mount point).
+              StringValue: VPC subnet for your restoration EC2 instance (ideally the same subnet used for the backup MongoDB).
         - Id: mySecurityGroupId
           Attributes:
             - Key: type
@@ -212,8 +222,8 @@ Resources:
             - Key: default
               StringValue: sg-1111111b
             - Key: description
-              StringValue: Security group that can connect to the Production/Backup EFS mount point.
-        - Id: myEFSHost
+              StringValue: Security group that can connect to the Production/Backup MongoDB.
+        - Id: myMongoHost
           Attributes:
             - Key: type
               StringValue: String
@@ -221,6 +231,22 @@ Resources:
               StringValue: backup-fs-12345678
             - Key: description
               StringValue: Name for the directory that already contains your backups.
+        - Id: myDBuser
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: root
+            - Key: description
+              StringValue: DB username.
+        - Id: myDBpassword
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: abc
+            - Key: description
+              StringValue: DB password.
         - Id: myRegion
           Attributes:
             - Key: type
@@ -302,8 +328,12 @@ Resources:
           StringValue: !Ref mySubnetId
         - Id: mySecurityGroupId
           StringValue: !Ref mySecurityGroupId
-        - Id: myEFSHost
-          StringValue: !Ref myEFSHost
+        - Id: myMongoHost
+          StringValue: !Ref myMongoHost
+        - Id: myDBuser
+          StringValue: !Ref myDBuser
+        - Id: myDBpassword
+          StringValue: !Ref myDBpassword
         - Id: myRegion
           StringValue: !Ref myRegion
         - Id: myS3BackupsBucket
@@ -325,4 +355,4 @@ Resources:
 
 Outputs:
   DataPipelineId:
-    Value: !Ref DataPipelineEFSBackup
+    Value: !Ref DataPipelineMongoBackup
