@@ -11,8 +11,9 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       Subscription:
-        - Protocol: email
+        -
           Endpoint: !Ref Email
+          Protocol: email
 
 Outputs:
   TopicArn:
