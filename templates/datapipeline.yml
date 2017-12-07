@@ -35,6 +35,8 @@ Parameters:
     Type: String
   myPeriod:
     Type: String
+  myStartDateTime:
+    Type: String
   myExecutionTimeout:
     Type: String
 
@@ -90,8 +92,8 @@ Resources:
           Fields:
             - Key: type
               StringValue: Schedule
-            - Key: startAt
-              StringValue: FIRST_ACTIVATION_DATE_TIME
+            - Key: startDateTime
+              StringValue: "#{myStartDateTime}"
             - Key: period
               StringValue: "#{myPeriod}"
         - Id: ShellCommandActivityObj
@@ -207,6 +209,14 @@ Resources:
               StringValue: "360 Minutes"
             - Key: description
               StringValue: Terminate the resource after this period.
+        - Id: myStartDateTime
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: "2017-12-01T00:00:00"
+            - Key: description
+              StringValue: Start at date/time.
         - Id: mySubnetId
           Attributes:
             - Key: type
@@ -350,6 +360,8 @@ Resources:
           StringValue: !Ref myTopicArn
         - Id: myKeyPair
           StringValue: !Ref myKeyPair
+        - Id: myStartDateTime
+          StringValue: !Ref myStartDateTime
         - Id: myPeriod
           StringValue: !Ref myPeriod
 
