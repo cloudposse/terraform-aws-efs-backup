@@ -151,7 +151,7 @@ Resources:
             - Key: topicArn
               StringValue: "#{myTopicArn}"
             - Key: subject
-              StringValue: "[Alart] EFS Backup Failed"
+              StringValue: "[Alert] EFS Backup Failed"
             - Key: message
               StringValue: |
                 scheduledStartTime: "#{node.@scheduledStartTime}"
