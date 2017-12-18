@@ -12,12 +12,14 @@ data "aws_iam_policy_document" "resource_role" {
 }
 
 module "resource_role_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
-  namespace  = "${var.namespace}"
-  stage      = "${terraform.workspace}"
-  name       = "${var.name}"
-  delimiter  = "${var.delimiter}"
-  attributes = ["${compact(concat(var.attributes, list("resource"), list("role")))}"]
+  source    = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
+  namespace = "${var.namespace}"
+  stage     = "${terraform.workspace}"
+  name      = "${var.name}"
+  delimiter = "${var.delimiter}"
+
+  # attributes = ["${compact(concat(var.attributes, list("resource-role")))}"]
+  attributes = ["${compact(concat(var.attributes, list("resource"), list("partial-role")))}"]
   tags       = "${var.tags}"
 }
 
@@ -60,8 +62,10 @@ module "role_label" {
   name      = "${var.name}"
   delimiter = "${var.delimiter}"
 
-  attributes = ["${compact(concat(var.attributes, list("role")))}"]
-  tags       = "${var.tags}"
+  attributes = ["${compact(concat(var.attributes, list("partial-role")))}"]
+
+  # attributes = ["${compact(concat(var.attributes, list("resource"), list("role")))}"]
+  tags = "${var.tags}"
 }
 
 resource "aws_iam_role" "role" {
