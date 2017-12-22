@@ -31,11 +31,28 @@ variable "security_group_id" {
 }
 
 variable "dbuser" {
-  default = "string"
+  type        = "string"
+  description = "Username for accessing MongoDB (e.g. `root`)"
 }
 
 variable "dbpassword" {
-  default = "string"
+  type        = "string"
+  description = "Password for accessing MongoDB (e.g. `password`)"
+}
+
+variable "dbname" {
+  type        = "string"
+  description = "MongoDB Database name (e.g. `testdb`)"
+}
+
+variable "dbcollection" {
+  type        = "string"
+  description = "MongoDB collection name (e.g. `testcollection`)"
+}
+
+variable "dbquery" {
+  type        = "string"
+  description = "MongoDB query  (e.g. `{$or:[{\"_type\":\"is:role\"},{\"_type\":\"is:template\"}]}`)"
 }
 
 variable "datapipeline_config" {
@@ -48,6 +65,10 @@ variable "datapipeline_config" {
     startDateTime = "2017-12-01T00:00:00"
     timeout       = "60 Minutes"
   }
+}
+
+variable "backup_enabled" {
+  default = "true"
 }
 
 variable "modify_security_group" {

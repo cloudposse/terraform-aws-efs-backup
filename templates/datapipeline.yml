@@ -17,6 +17,12 @@ Parameters:
     Type: String
   myDBpassword:
     Type: String
+  myDBname:
+    Type: String
+  myDBcollection:
+    Type: String
+  myDBquery:
+    Type: String
   myRegion:
     Type: String
   myImageId:
@@ -110,11 +116,21 @@ Resources:
                 destination="$3"
                 user="$4"
                 password="$5"
-                [[ -d /backup ]] || sudo mkdir /backup
+                dbname="$6"
+                dbcollection="$7"
+                query="$8"
+                [[ -d /backup-partial ]] || sudo mkdir /backup
                 sudo yum-config-manager --add-repo https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/3.2/x86_64/
                 sudo rpm --import https://www.mongodb.org/static/pgp/server-3.2.asc
                 sudo yum -y install mongodb-org-tools
-                sudo mongodump -h $source:27017 -u $user -p $password -o /backup/
+                # if [[ (-n $dbname) -a (-n $dbcollection) -a (-n $query) ]]; then
+                if [ $dbname != "none" ] || [ $dbcollection != "none" ] || [ $query != "none" ]; then
+                  # Do partial backup
+                  sudo mongodump -h $source:27017 -u $user -p $password --authenticationDatabase admin -d $dbname -c $dbcollection -q $query -o /backup/
+                else
+                  # Do full backup
+                  sudo mongodump -h $source:27017 -u $user -p $password -o /backup/
+                fi
                 sudo aws s3 sync --delete --exact-timestamps /backup/ s3://$destination/
                 backup_status="$?"
                 # Return code 2 means that the following were skipped:
@@ -136,6 +152,12 @@ Resources:
               StringValue: "#{myDBuser}"
             - Key: scriptArgument
               StringValue: "#{myDBpassword}"
+            - Key: scriptArgument
+              StringValue: "#{myDBname}"
+            - Key: scriptArgument
+              StringValue: "#{myDBcollection}"
+            - Key: scriptArgument
+              StringValue: "#{myDBquery}"
             - Key: onSuccess
               RefValue: SuccessNotify
             - Key: onFail
@@ -257,6 +279,30 @@ Resources:
               StringValue: abc
             - Key: description
               StringValue: DB password.
+        - Id: myDBname
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: none
+            - Key: description
+              StringValue: DB name.
+        - Id: myDBcollection
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: none
+            - Key: description
+              StringValue: DB colllection.
+        - Id: myDBquery
+          Attributes:
+            - Key: type
+              StringValue: String
+            - Key: default
+              StringValue: none
+            - Key: description
+              StringValue: DB query.
         - Id: myRegion
           Attributes:
             - Key: type
@@ -344,6 +390,12 @@ Resources:
           StringValue: !Ref myDBuser
         - Id: myDBpassword
           StringValue: !Ref myDBpassword
+        - Id: myDBname
+          StringValue: !Ref myDBname
+        - Id: myDBcollection
+          StringValue: !Ref myDBcollection
+        - Id: myDBquery
+          StringValue: !Ref myDBquery
         - Id: myRegion
           StringValue: !Ref myRegion
         - Id: myS3BackupsBucket

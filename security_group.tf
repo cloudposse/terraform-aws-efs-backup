@@ -1,4 +1,5 @@
 resource "aws_security_group" "datapipeline" {
+  count       = "${local.resource_count}"
   tags        = "${module.label.tags}"
   vpc_id      = "${data.aws_vpc.default.id}"
   description = "${module.label.id}"

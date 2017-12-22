@@ -1,14 +1,16 @@
 module "sns_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.3.1"
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
   delimiter  = "${var.delimiter}"
   attributes = ["${compact(concat(var.attributes, list("sns")))}"]
   tags       = "${var.tags}"
+  enabled    = "${var.backup_enabled == "true" ? "true" : "false"}"
 }
 
 resource "aws_cloudformation_stack" "sns" {
+  count         = "${local.resource_count}"
   name          = "${module.sns_label.id}"
   template_body = "${file("${path.module}/templates/sns.yml")}"
 
@@ -20,16 +22,18 @@ resource "aws_cloudformation_stack" "sns" {
 }
 
 module "datapipeline_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.2.1"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.3.1"
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   name       = "${var.name}"
   delimiter  = "${var.delimiter}"
   attributes = ["${compact(concat(var.attributes, list("datapipeline")))}"]
   tags       = "${var.tags}"
+  enabled    = "${var.backup_enabled == "true" ? "true" : "false"}"
 }
 
 resource "aws_cloudformation_stack" "datapipeline" {
+  count         = "${local.resource_count}"
   name          = "${module.datapipeline_label.id}"
   template_body = "${file("${path.module}/templates/datapipeline.yml")}"
 
@@ -40,9 +44,12 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myMongoHost                = "${var.ip_address}"
     myDBuser                   = "${var.dbuser}"
     myDBpassword               = "${var.dbpassword}"
+    myDBname                   = "${var.dbname}"
+    myDBcollection             = "${var.dbcollection}"
+    myDBquery                  = "${var.dbquery}"
     myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
     myRegion                   = "${signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name}"
-    myImageId                  = "${data.aws_ami.amazon_linux.id}"
+    myImageId                  = "${var.dbname == "none" ? data.aws_ami.amazon_linux_mongo.id : data.aws_ami.amazon_linux.id}"
     myTopicArn                 = "${aws_cloudformation_stack.sns.outputs["TopicArn"]}"
     myS3LogBucket              = "${aws_s3_bucket.logs.id}"
     myDataPipelineResourceRole = "${aws_iam_instance_profile.resource_role.name}"
