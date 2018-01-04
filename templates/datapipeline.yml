@@ -161,34 +161,12 @@ Resources:
       ParameterObjects:
         - Id: myInstanceType
           Attributes:
+            - Key: description
+              StringValue: Instance type for performing the restore.
             - Key: type
               StringValue: String
             - Key: default
-              StringValue: t2.nano
-            - Key: description
-              StringValue: Instance type for performing the restore.
-            - Key: allowedValues
-              StringValue: t2.nano
-            - Key: allowedValues
               StringValue: t2.micro
-            - Key: allowedValues
-              StringValue: m3.medium
-            - Key: allowedValues
-              StringValue: m3.large
-            - Key: allowedValues
-              StringValue: m3.xlarge
-            - Key: allowedValues
-              StringValue: m3.2xlarge
-            - Key: allowedValues
-              StringValue: c3.large
-            - Key: allowedValues
-              StringValue: c3.xlarge
-            - Key: allowedValues
-              StringValue: c3.2xlarge
-            - Key: allowedValues
-              StringValue: c3.4xlarge
-            - Key: allowedValues
-              StringValue: c3.8xlarge
         - Id: myExecutionTimeout
           Attributes:
             - Key: type
