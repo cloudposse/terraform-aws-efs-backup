@@ -1,4 +1,4 @@
-# terraform-aws-efs-backup
+# terraform-aws-efs-backup [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-efs-backup.svg)](https://travis-ci.org/cloudposse/terraform-aws-efs-backup)
 
 Terraform module designed to easily backup EFS filesystems to S3 using DataPipeline.
 
