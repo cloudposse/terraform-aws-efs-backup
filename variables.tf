@@ -84,6 +84,14 @@ variable "noncurrent_version_expiration_days" {
   default = "35"
 }
 
+variable "abort_incomplete_multipart_upload_days" {
+  default = "7"
+}
+
+variable "expired_object_delete_marker" {
+  default = "true"
+}
+
 variable "delimiter" {
   type        = "string"
   default     = "-"

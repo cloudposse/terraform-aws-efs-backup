@@ -37,8 +37,12 @@ resource "aws_s3_bucket" "backups" {
   }
 
   lifecycle_rule {
-    enabled = "true"
-    prefix  = "mongo"
+    enabled                                = "true"
+    abort_incomplete_multipart_upload_days = "${var.abort_incomplete_multipart_upload_days}"
+
+    expiration {
+      expired_object_delete_marker = "${var.expired_object_delete_marker}"
+    }
 
     noncurrent_version_expiration {
       days = "${var.noncurrent_version_expiration_days}"
