@@ -47,6 +47,8 @@ resource "aws_cloudformation_stack" "datapipeline" {
     myDBname                   = "${var.dbname}"
     myDBcollection             = "${var.dbcollection}"
     myDBquery                  = "${var.dbquery}"
+    myDBatlasShared            = "${var.dbatlas_shared}"
+    myDBatlasReplicaset        = "${var.dbatlas_replicaset}"
     myS3BackupsBucket          = "${aws_s3_bucket.backups.id}"
     myRegion                   = "${signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name}"
     myImageId                  = "${var.dbname == "none" ? data.aws_ami.amazon_linux_mongo.id : data.aws_ami.amazon_linux.id}"

@@ -50,6 +50,18 @@ variable "dbcollection" {
   description = "MongoDB collection name (e.g. `testcollection`)"
 }
 
+variable "dbatlas_shared" {
+  type        = "string"
+  default     = "false"
+  description = "MongoDB atlas-shared (e.g. `true` or `false`)"
+}
+
+variable "dbatlas_replicaset" {
+  type        = "string"
+  default     = "false"
+  description = "MongoDB atlas-replicaset (e.g. `true` or `false`)"
+}
+
 variable "dbquery" {
   type        = "string"
   description = "MongoDB query  (e.g. `{$or:[{\"_type\":\"is:role\"},{\"_type\":\"is:template\"}]}`)"
