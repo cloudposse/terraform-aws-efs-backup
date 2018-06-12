@@ -123,7 +123,8 @@ Resources:
                 dbname="$6"
                 dbcollection="$7"
                 query="$8"
-                atlas="$9"
+                atlas_shared="$9"
+                atlas_replicaset="$10"
                 [[ -d /backup-partial ]] || sudo mkdir /backup
                 if [ $atlas_shared = "true" ] || [ $atlas_replicaset = "true" ]; then
                  sudo yum-config-manager --add-repo https://repo.mongodb.org/yum/amazon/2013.03/mongodb-org/3.6/x86_64/
