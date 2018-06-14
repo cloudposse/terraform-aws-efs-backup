@@ -45,6 +45,24 @@ variable "dbname" {
   description = "MongoDB Database name (e.g. `testdb`)"
 }
 
+variable "dbssl" {
+  type        = "string"
+  default     = "false"
+  description = "MongoDB ssl (e.g. `true/false`)"
+}
+
+variable "dbport" {
+  type        = "string"
+  default     = "27017"
+  description = "MongoDB port (e.g. `27017`)"
+}
+
+variable "dbversion" {
+  type        = "string"
+  default     = "3.2"
+  description = "MongoDB version (e.g. `3.2`)"
+}
+
 variable "dbcollection" {
   type        = "string"
   description = "MongoDB collection name (e.g. `testcollection`)"
