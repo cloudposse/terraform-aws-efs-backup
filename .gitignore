@@ -8,3 +8,6 @@ secrets.tfvars
 .terraform
 .idea
 *.iml
+
+.build-harness
+build-harness

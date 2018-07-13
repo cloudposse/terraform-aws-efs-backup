@@ -1,13 +1,13 @@
 variable "name" {
-  type = "string"
+  description = "The Name of the application or solution  (e.g. `bastion` or `portal`)"
 }
 
 variable "namespace" {
-  type = "string"
+  description = "Namespace (e.g. `cp` or `cloudposse`)"
 }
 
 variable "stage" {
-  type = "string"
+  description = "Stage (e.g. `prod`, `dev`, `staging`)"
 }
 
 variable "region" {
@@ -17,17 +17,20 @@ variable "region" {
 }
 
 variable "vpc_id" {
-  type = "string"
+  default     = ""
+  description = "VPC ID"
 }
 
 # https://www.terraform.io/docs/configuration/variables.html
 # simply using string values rather than booleans for variables is recommended
 variable "use_ip_address" {
-  default = "false"
+  default     = "false"
+  description = "If set to `true`, will use IP address instead of DNS name to connect to the `EFS`"
 }
 
 variable "datapipeline_config" {
-  type = "map"
+  description = "DataPipeline configuration options"
+  type        = "map"
 
   default = {
     instance_type = "t2.micro"
@@ -43,16 +46,19 @@ variable "efs_mount_target_id" {
 }
 
 variable "modify_security_group" {
-  default = "false"
+  default     = "false"
+  description = " Should the module modify the `EFS` security group"
 }
 
 # Set a name of ssh key that will be deployed on DataPipeline's instance. The key should be present in AWS.
 variable "ssh_key_pair" {
-  type = "string"
+  type        = "string"
+  description = "`SSH` key that will be deployed on DataPipeline's instance"
 }
 
 variable "noncurrent_version_expiration_days" {
-  default = "35"
+  default     = "35"
+  description = "S3 object versions expiration period (days)"
 }
 
 variable "delimiter" {
