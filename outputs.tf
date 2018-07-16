@@ -14,6 +14,6 @@ output "datapipeline_ids" {
 }
 
 output "security_group_id" {
-  value       = "${aws_security_group.default.id}"
+  value       = "${aws_security_group.datapipeline.id}"
   description = "Security group id"
 }
