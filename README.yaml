@@ -1,0 +1,153 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: terraform-aws-efs-backup
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/terraform-aws-efs-backup
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://travis-ci.org/cloudposse/terraform-aws-efs-backup.svg?branch=master"
+    url: "https://travis-ci.org/cloudposse/terraform-aws-efs-backup"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/terraform-aws-efs-backup.svg"
+    url: "https://github.com/cloudposse/terraform-aws-efs-backup/releases/latest"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+related:
+  - name: "terraform-aws-efs"
+    description: "Terraform Module to define an EFS Filesystem (aka NFS)"
+    url: "https://github.com/cloudposse/terraform-aws-efs"
+  - name: "terraform-aws-efs-cloudwatch-sns-alarms"
+    description: "Terraform module that configures CloudWatch SNS alerts for EFS"
+    url: "https://github.com/cloudposse/terraform-aws-efs-cloudwatch-sns-alarms"
+
+# Short description of this project
+description: |-
+  Terraform module designed to easily backup EFS filesystems to S3 using DataPipeline.
+
+  The workflow is simple:
+
+  * Periodically launch resource (EC2 instance) based on schedule
+  * Execute the shell command defined in the activity on the instance
+  * Sync data from Production EFS to S3 Bucket by using `aws-cli`
+  * The execution log of the activity is stored in `S3`
+  * Publish the success or failure of the activity to an `SNS` topic
+  * Automatically rotate the backups using `S3 lifecycle rule`
+
+# How to use this project
+usage: |-
+  Include this module in your existing terraform code:
+
+  ```hcl
+  module "efs_backup" {
+    source = "git::https://github.com/cloudposse/terraform-aws-efs-backup.git?ref=master"
+
+    name                               = "${var.name}"
+    stage                              = "${var.stage}"
+    namespace                          = "${var.namespace}"
+    vpc_id                             = "${var.vpc_id}"
+    efs_mount_target_id                = "${var.efs_mount_target_id}"
+    use_ip_address                     = "false"
+    noncurrent_version_expiration_days = "${var.noncurrent_version_expiration_days}"
+    ssh_key_pair                       = "${var.ssh_key_pair}"
+    datapipeline_config                = "${var.datapipeline_config}"
+    modify_security_group              = "true"
+  }
+
+  output "efs_backup_security_group" {
+    value = "${module.efs_backup.security_group_id}"
+  }
+  ```
+  ## Integration with `EFS`
+
+  To enable connectivity between the `DataPipeline` instances and the `EFS`, use one of the following methods to configure Security Groups:
+
+  1. Explicitly add the `DataPipeline` SG (the output of this module `security_group_id`) to the list of the `ingress` rules of the `EFS` SG. For example:
+
+  ```hcl
+  module "elastic_beanstalk_environment" {
+    source     = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment.git?ref=master"
+    namespace  = "${var.namespace}"
+    name       = "${var.name}"
+    stage      = "${var.stage}"
+    delimiter  = "${var.delimiter}"
+    attributes = ["${compact(concat(var.attributes, list("eb-env")))}"]
+    tags       = "${var.tags}"
+
+    # ..............................
+  }
+
+  module "efs" {
+    source     = "git::https://github.com/cloudposse/terraform-aws-efs.git?ref=tmaster"
+    namespace  = "${var.namespace}"
+    name       = "${var.name}"
+    stage      = "${var.stage}"
+    delimiter  = "${var.delimiter}"
+    attributes = ["${compact(concat(var.attributes, list("efs")))}"]
+    tags       = "${var.tags}"
+
+    # Allow EB/EC2 instances and DataPipeline instances to connect to the EFS
+    security_groups = ["${module.elastic_beanstalk_environment.security_group_id}", "${module.efs_backup.security_group_id}"]
+  }
+
+  module "efs_backup" {
+    source     = "git::https://github.com/cloudposse/terraform-aws-efs-backup.git?ref=master"
+    name       = "${var.name}"
+    stage      = "${var.stage}"
+    namespace  = "${var.namespace}"
+    delimiter  = "${var.delimiter}"
+    attributes = ["${compact(concat(var.attributes, list("efs-backup")))}"]
+    tags       = "${var.tags}"
+    
+    # Important to set it to `false` since we added the `DataPipeline` SG (output of the `efs_backup` module) to the `security_groups` of the `efs` module
+    # See NOTE below for more information
+    modify_security_group = "false"
+
+    # ..............................
+  }
+  ```
+
+  2. Set `modify_security_group` attribute to `true` so the module will modify the `EFS` SG to allow the `DataPipeline` to connect to the `EFS`
+
+  **NOTE:** Do not mix these two methods together. 
+  `Terraform` does not support using a Security Group with in-line rules in conjunction with any Security Group Rule resources.
+  https://www.terraform.io/docs/providers/aws/r/security_group_rule.html
+  > NOTE on Security Groups and Security Group Rules: Terraform currently provides both a standalone Security Group Rule resource 
+  (a single ingress or egress rule), and a Security Group resource with ingress and egress rules defined in-line. 
+  At this time you cannot use a Security Group with in-line rules in conjunction with any Security Group Rule resources. 
+  Doing so will cause a conflict of rule settings and will overwrite rules.
+
+references:
+  - name: "datapipeline-efs-backup-demo"
+    description: 'Thanks for inspiration'
+    url: "https://github.com/knakayama/datapipeline-efs-backup-demo"
+
+include:
+  - "docs/targets.md"
+  - "docs/terraform.md"
+
+# Contributors to this project
+contributors:
+  - name: "Erik Osterman"
+    github: "osterman"
+  - name: "Andriy Knysh"
+    github: "aknysh"
+  - name: "Sergey Vasilyev"
+    github: "s2504s"
+  - name: "abferm"
+    github: "abferm"
