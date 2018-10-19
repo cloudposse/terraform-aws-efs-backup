@@ -17,7 +17,7 @@ module "resource_role_label" {
   stage      = "${var.stage}"
   name       = "${var.name}"
   delimiter  = "${var.delimiter}"
-  attributes = ["${compact(concat(var.attributes, list("resource-role")))}"]
+  attributes = "${var.attributes}"
   tags       = "${var.tags}"
 }
 
