@@ -7,6 +7,26 @@
 # Name of this project
 name: terraform-aws-efs-backup
 
+# Tags of this project
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - backups
+  - datapipeline
+  - s3
+  - efs
+  - nfs
+  - snapshot
+  - lambda
+  - automatic
+  - scheduled-job
+  - cronjob
+
+# Categories of this project
+categories:
+  - terraform-modules/backups
+
 # Logo for this project
 #logo: docs/logo.png
 
