@@ -78,3 +78,9 @@ variable "tags" {
   default     = {}
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
 }
+
+variable "subnet_id" {
+  type        = "string"
+  default     = ""
+  description = "Optionally specify the subnet to use"
+}
