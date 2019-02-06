@@ -6,13 +6,20 @@ Parameters:
   Email:
     Type: String
 
+Conditions:
+  SubscribeEmail: !Not [!Equals [ !Ref Email, ""]]
+
 Resources:
   Topic:
     Type: AWS::SNS::Topic
+
+  EmailSubscription:
+    Condition: SubscribeEmail
+    Type: AWS::SNS::Subscription
     Properties:
-      Subscription:
-        - Protocol: email
-          Endpoint: !Ref Email
+      TopicArn: !Ref Topic
+      Protocol: email
+      Endpoint: !Ref Email
 
 Outputs:
   TopicArn:
