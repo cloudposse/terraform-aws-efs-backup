@@ -84,3 +84,9 @@ variable "subnet_id" {
   default     = ""
   description = "Optionally specify the subnet to use"
 }
+
+variable "datapipeline_security_group" {
+  type        = "string"
+  default     = ""
+  description = "Optionally specify a security group to use for the datapipeline instances"
+}
