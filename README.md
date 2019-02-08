@@ -175,6 +175,7 @@ Available targets:
 | datapipeline_ids | Datapipeline ids |
 | logs_bucket_name | Logs bucket name |
 | security_group_id | Security group id |
+| sns_topic_arn | Backup notification SNS topic ARN |
 
 
 

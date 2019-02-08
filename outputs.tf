@@ -17,3 +17,8 @@ output "security_group_id" {
   value       = "${aws_security_group.datapipeline.id}"
   description = "Security group id"
 }
+
+output "sns_topic_arn" {
+  value       = "${aws_cloudformation_stack.sns.outputs.TopicArn}"
+  description = "Backup notification SNS topic ARN"
+}
