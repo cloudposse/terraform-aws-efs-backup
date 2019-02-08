@@ -14,7 +14,7 @@ output "datapipeline_ids" {
 }
 
 output "security_group_id" {
-  value       = "${var.datapipeline_security_group == "" ? join(" ", aws_security_group.datapipeline.*.id) : var.datapipeline_security_group}"
+  value       = "${var.datapipeline_security_group == "" ? join("", aws_security_group.datapipeline.*.id) : var.datapipeline_security_group}"
   description = "Security group id"
 }
 
