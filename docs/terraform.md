@@ -1,4 +1,3 @@
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -14,6 +13,7 @@
 | region | (Optional) AWS Region. If not specified, will be derived from 'aws_region' data source | string | `` | no |
 | ssh_key_pair | `SSH` key that will be deployed on DataPipeline's instance | string | - | yes |
 | stage | Stage (e.g. `prod`, `dev`, `staging`) | string | - | yes |
+| subnet_id | Optionally specify the subnet to use | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map | `<map>` | no |
 | use_ip_address | If set to `true`, will use IP address instead of DNS name to connect to the `EFS` | string | `false` | no |
 | vpc_id | VPC ID | string | `` | no |
