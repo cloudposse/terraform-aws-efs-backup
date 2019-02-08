@@ -153,6 +153,7 @@ Available targets:
 |------|-------------|:----:|:-----:|:-----:|
 | attributes | Additional attributes (e.g. `efs-backup`) | list | `<list>` | no |
 | datapipeline_config | DataPipeline configuration options | map | `<map>` | no |
+| datapipeline_security_group | Optionally specify a security group to use for the datapipeline instances | string | `` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | efs_mount_target_id | EFS Mount Target ID (e.g. `fsmt-279bfc62`) | string | - | yes |
 | modify_security_group | Should the module modify the `EFS` security group | string | `false` | no |

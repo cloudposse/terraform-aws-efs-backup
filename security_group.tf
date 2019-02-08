@@ -1,4 +1,5 @@
 resource "aws_security_group" "datapipeline" {
+  count       = "${var.datapipeline_security_group == "" ? 1 : 0}"
   tags        = "${module.label.tags}"
   vpc_id      = "${data.aws_vpc.default.id}"
   name        = "${module.label.id}"
@@ -26,5 +27,5 @@ resource "aws_security_group_rule" "datapipeline_efs_ingress" {
   security_group_id        = "${data.aws_efs_mount_target.default.security_groups[0]}"
   to_port                  = 0
   type                     = "ingress"
-  source_security_group_id = "${aws_security_group.datapipeline.id}"
+  source_security_group_id = "${var.datapipeline_security_group == "" ? join("", aws_security_group.datapipeline.*.id) : var.datapipeline_security_group}"
 }
