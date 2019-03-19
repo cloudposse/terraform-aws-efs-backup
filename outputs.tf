@@ -18,7 +18,7 @@ output "security_group_id" {
   description = "Security group id"
 }
 
-output "sns_topic_arn" {
-  value       = "${aws_cloudformation_stack.sns.outputs.arn}"
-  description = "Backup notification SNS topic ARN"
-}
+#output "sns_topic_arn" {
+#  value       = "${aws_cloudformation_stack.sns.outputs.arn}"
+#  description = "Backup notification SNS topic ARN"
+#}
