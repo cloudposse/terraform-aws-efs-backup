@@ -1,5 +1,4 @@
 data "aws_region" "default" {
-  current = true
 }
 
 module "label" {
