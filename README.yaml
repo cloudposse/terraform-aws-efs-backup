@@ -77,15 +77,16 @@ usage: |-
   module "efs_backup" {
     source = "git::https://github.com/cloudposse/terraform-aws-efs-backup.git?ref=master"
 
-    name                               = "${var.name}"
-    stage                              = "${var.stage}"
-    namespace                          = "${var.namespace}"
-    vpc_id                             = "${var.vpc_id}"
-    efs_mount_target_id                = "${var.efs_mount_target_id}"
+    name                               = var.name
+    stage                              = var.stage
+    environment                        = var.environment
+    namespace                          = var.namespace
+    vpc_id                             = var.vpc_id
+    efs_mount_target_id                = var.efs_mount_target_id
     use_ip_address                     = "false"
-    noncurrent_version_expiration_days = "${var.noncurrent_version_expiration_days}"
-    ssh_key_pair                       = "${var.ssh_key_pair}"
-    datapipeline_config                = "${var.datapipeline_config}"
+    noncurrent_version_expiration_days = var.noncurrent_version_expiration_days
+    ssh_key_pair                       = var.ssh_key_pair
+    datapipeline_config                = var.datapipeline_config
     modify_security_group              = "true"
   }
 
@@ -101,39 +102,42 @@ usage: |-
 
   ```hcl
   module "elastic_beanstalk_environment" {
-    source     = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment.git?ref=master"
-    namespace  = "${var.namespace}"
-    name       = "${var.name}"
-    stage      = "${var.stage}"
-    delimiter  = "${var.delimiter}"
-    attributes = ["${compact(concat(var.attributes, list("eb-env")))}"]
-    tags       = "${var.tags}"
+    source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment.git?ref=master"
+    namespace   = var.namespace
+    name        = var.name
+    stage       = var.stage
+    environment = var.environment
+    delimiter   = var.delimiter
+    attributes  = compact(concat(var.attributes, list("eb-env")))
+    tags        = var.tags
 
     # ..............................
   }
 
   module "efs" {
-    source     = "git::https://github.com/cloudposse/terraform-aws-efs.git?ref=tmaster"
-    namespace  = "${var.namespace}"
-    name       = "${var.name}"
-    stage      = "${var.stage}"
-    delimiter  = "${var.delimiter}"
-    attributes = ["${compact(concat(var.attributes, list("efs")))}"]
-    tags       = "${var.tags}"
+    source      = "git::https://github.com/cloudposse/terraform-aws-efs.git?ref=tmaster"
+    namespace   = var.namespace
+    name        = var.name
+    stage       = var.stage
+    environment = var.environment
+    delimiter   = var.delimiter
+    attributes  = compact(concat(var.attributes, list("efs")))
+    tags        = var.tags
 
     # Allow EB/EC2 instances and DataPipeline instances to connect to the EFS
     security_groups = ["${module.elastic_beanstalk_environment.security_group_id}", "${module.efs_backup.security_group_id}"]
   }
 
   module "efs_backup" {
-    source     = "git::https://github.com/cloudposse/terraform-aws-efs-backup.git?ref=master"
-    name       = "${var.name}"
-    stage      = "${var.stage}"
-    namespace  = "${var.namespace}"
-    delimiter  = "${var.delimiter}"
-    attributes = ["${compact(concat(var.attributes, list("efs-backup")))}"]
-    tags       = "${var.tags}"
-    
+    source      = "git::https://github.com/cloudposse/terraform-aws-efs-backup.git?ref=master"
+    name        = var.name
+    stage       = var.stage
+    environment = var.environment
+    namespace   = var.namespace
+    delimiter   = var.delimiter
+    attributes  = compact(concat(var.attributes, list("efs-backup")))
+    tags        = var.tags}"
+
     # Important to set it to `false` since we added the `DataPipeline` SG (output of the `efs_backup` module) to the `security_groups` of the `efs` module
     # See NOTE below for more information
     modify_security_group = "false"
@@ -144,12 +148,12 @@ usage: |-
 
   2. Set `modify_security_group` attribute to `true` so the module will modify the `EFS` SG to allow the `DataPipeline` to connect to the `EFS`
 
-  **NOTE:** Do not mix these two methods together. 
+  **NOTE:** Do not mix these two methods together.
   `Terraform` does not support using a Security Group with in-line rules in conjunction with any Security Group Rule resources.
   https://www.terraform.io/docs/providers/aws/r/security_group_rule.html
-  > NOTE on Security Groups and Security Group Rules: Terraform currently provides both a standalone Security Group Rule resource 
-  (a single ingress or egress rule), and a Security Group resource with ingress and egress rules defined in-line. 
-  At this time you cannot use a Security Group with in-line rules in conjunction with any Security Group Rule resources. 
+  > NOTE on Security Groups and Security Group Rules: Terraform currently provides both a standalone Security Group Rule resource
+  (a single ingress or egress rule), and a Security Group resource with ingress and egress rules defined in-line.
+  At this time you cannot use a Security Group with in-line rules in conjunction with any Security Group Rule resources.
   Doing so will cause a conflict of rule settings and will overwrite rules.
 
 references:
@@ -171,3 +175,5 @@ contributors:
     github: "s2504s"
   - name: "abferm"
     github: "abferm"
+  - name: "Adam Crews"
+    github: "adamcrews"
