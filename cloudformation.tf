@@ -43,11 +43,11 @@ resource "aws_cloudformation_stack" "datapipeline" {
     mySubnetId                 = var.subnet_id == "" ? local.default_subnets[0] : var.subnet_id
     mySecurityGroupId          = var.datapipeline_security_group == "" ? join("", aws_security_group.datapipeline.*.id) : var.datapipeline_security_group
     myEFSHost                  = var.use_ip_address == "true" ? data.aws_efs_mount_target.default.ip_address : format("%s.efs.%s.amazonaws.com", data.aws_efs_mount_target.default.file_system_id, (signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name))
-    myS3BackupsBucket          = aws_s3_bucket.backups.id
+    myS3BackupsBucket          = module.backup_bucket.bucket_id
     myRegion                   = signum(length(var.region)) == 1 ? var.region : data.aws_region.default.name
     myImageId                  = data.aws_ami.amazon_linux.id
     myTopicArn                 = aws_cloudformation_stack.sns.outputs["TopicArn"]
-    myS3LogBucket              = aws_s3_bucket.logs.id
+    myS3LogBucket              = module.logs_bucket.bucket_id
     myDataPipelineResourceRole = aws_iam_instance_profile.resource_role.name
     myDataPipelineRole         = aws_iam_role.role.name
     myKeyPair                  = var.ssh_key_pair
