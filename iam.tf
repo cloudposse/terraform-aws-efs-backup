@@ -1,3 +1,5 @@
+data "aws_partition" "current" {}
+
 data "aws_iam_policy_document" "resource_role" {
   statement {
     sid     = "EC2AssumeRole"
@@ -28,7 +30,7 @@ resource "aws_iam_role" "resource_role" {
 
 resource "aws_iam_role_policy_attachment" "resource_role" {
   role       = "${aws_iam_role.resource_role.name}"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforDataPipelineRole"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonEC2RoleforDataPipelineRole"
 }
 
 resource "aws_iam_instance_profile" "resource_role" {
@@ -70,5 +72,5 @@ resource "aws_iam_role" "role" {
 
 resource "aws_iam_role_policy_attachment" "role" {
   role       = "${aws_iam_role.role.name}"
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSDataPipelineRole"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AWSDataPipelineRole"
 }
