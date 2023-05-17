@@ -11,6 +11,7 @@ data "aws_iam_policy_document" "resource_role" {
   }
 }
 
+
 module "resource_role_label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.3.1"
   namespace  = var.namespace
