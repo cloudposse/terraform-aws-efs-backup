@@ -11,7 +11,7 @@ variable "stage" {
 }
 
 variable "region" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "(Optional) AWS Region. If not specified, will be derived from 'aws_region' data source"
 }
@@ -30,7 +30,7 @@ variable "use_ip_address" {
 
 variable "datapipeline_config" {
   description = "DataPipeline configuration options"
-  type        = "map"
+  type        = map(string)
 
   default = {
     instance_type = "t2.micro"
@@ -41,7 +41,7 @@ variable "datapipeline_config" {
 }
 
 variable "efs_mount_target_id" {
-  type        = "string"
+  type        = string
   description = "EFS Mount Target ID (e.g. `fsmt-279bfc62`)"
 }
 
@@ -52,7 +52,7 @@ variable "modify_security_group" {
 
 # Set a name of ssh key that will be deployed on DataPipeline's instance. The key should be present in AWS.
 variable "ssh_key_pair" {
-  type        = "string"
+  type        = string
   description = "`SSH` key that will be deployed on DataPipeline's instance"
 }
 
@@ -62,31 +62,31 @@ variable "noncurrent_version_expiration_days" {
 }
 
 variable "delimiter" {
-  type        = "string"
+  type        = string
   default     = "-"
   description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
 }
 
 variable "attributes" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "Additional attributes (e.g. `efs-backup`)"
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
 }
 
 variable "subnet_id" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "Optionally specify the subnet to use"
 }
 
 variable "datapipeline_security_group" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "Optionally specify a security group to use for the datapipeline instances"
 }
