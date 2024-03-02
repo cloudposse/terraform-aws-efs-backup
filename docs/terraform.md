@@ -13,13 +13,13 @@ No requirements.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_backups_label"></a> [backups\_label](#module\_backups\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.1 |
-| <a name="module_datapipeline_label"></a> [datapipeline\_label](#module\_datapipeline\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.1 |
-| <a name="module_label"></a> [label](#module\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.1 |
-| <a name="module_logs_label"></a> [logs\_label](#module\_logs\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.1 |
-| <a name="module_resource_role_label"></a> [resource\_role\_label](#module\_resource\_role\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.1 |
-| <a name="module_role_label"></a> [role\_label](#module\_role\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.1 |
-| <a name="module_sns_label"></a> [sns\_label](#module\_sns\_label) | git::https://github.com/cloudposse/terraform-null-label.git | tags/0.3.1 |
+| <a name="module_backups_label"></a> [backups\_label](#module\_backups\_label) | git::https://github.com/cloudposse/terraform-null-label.git | 0.25.0 |
+| <a name="module_datapipeline_label"></a> [datapipeline\_label](#module\_datapipeline\_label) | git::https://github.com/cloudposse/terraform-null-label.git | 0.25.0 |
+| <a name="module_label"></a> [label](#module\_label) | git::https://github.com/cloudposse/terraform-null-label.git | 0.25.0 |
+| <a name="module_logs_label"></a> [logs\_label](#module\_logs\_label) | git::https://github.com/cloudposse/terraform-null-label.git | 0.25.0 |
+| <a name="module_resource_role_label"></a> [resource\_role\_label](#module\_resource\_role\_label) | git::https://github.com/cloudposse/terraform-null-label.git | 0.25.0 |
+| <a name="module_role_label"></a> [role\_label](#module\_role\_label) | git::https://github.com/cloudposse/terraform-null-label.git | 0.25.0 |
+| <a name="module_sns_label"></a> [sns\_label](#module\_sns\_label) | git::https://github.com/cloudposse/terraform-null-label.git | 0.25.0 |
 
 ## Resources
 
