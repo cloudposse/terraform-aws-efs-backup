@@ -213,7 +213,7 @@ No requirements.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_attributes"></a> [attributes](#input\_attributes) | Additional attributes (e.g. `efs-backup`) | `list(string)` | `[]` | no |
-| <a name="input_datapipeline_config"></a> [datapipeline\_config](#input\_datapipeline\_config) | DataPipeline configuration options | `map(string)` | <pre>{<br>  "email": "",<br>  "instance_type": "t2.micro",<br>  "period": "24 hours",<br>  "timeout": "60 Minutes"<br>}</pre> | no |
+| <a name="input_datapipeline_config"></a> [datapipeline\_config](#input\_datapipeline\_config) | DataPipeline configuration options | `map(string)` | <pre>{<br/>  "email": "",<br/>  "instance_type": "t2.micro",<br/>  "period": "24 hours",<br/>  "timeout": "60 Minutes"<br/>}</pre> | no |
 | <a name="input_datapipeline_security_group"></a> [datapipeline\_security\_group](#input\_datapipeline\_security\_group) | Optionally specify a security group to use for the datapipeline instances | `string` | `""` | no |
 | <a name="input_delimiter"></a> [delimiter](#input\_delimiter) | Delimiter to be used between `name`, `namespace`, `stage`, etc. | `string` | `"-"` | no |
 | <a name="input_efs_mount_target_id"></a> [efs\_mount\_target\_id](#input\_efs\_mount\_target\_id) | EFS Mount Target ID (e.g. `fsmt-279bfc62`) | `string` | n/a | yes |
