@@ -45,7 +45,7 @@ badges:
     url: https://github.com/cloudposse/terraform-aws-efs-backup/commits
   - name: Slack Community
     image: https://slack.cloudposse.com/for-the-badge.svg
-    url: https://slack.cloudposse.com
+    url: https://cloudposse.com/slack
 
 # List any related terraform modules that this module may be used with or that this module depends on.
 related:
@@ -157,9 +157,5 @@ references:
     description: 'Thanks for inspiration'
     url: "https://github.com/knakayama/datapipeline-efs-backup-demo"
 
-include:
-  - "docs/targets.md"
-  - "docs/terraform.md"
-
-# Contributors to this project
+include: []
 contributors: []
